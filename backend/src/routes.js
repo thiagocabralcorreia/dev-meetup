@@ -1,17 +1,21 @@
 const express = require("express");
+const multer = require("multer");
 
 const UserController = require("./controllers/UserController");
+const EventController = require("./controllers/EventController");
+const uploadConfig = require("./config/upload");
 
 const routes = express.Router();
+const upload = multer(uploadConfig);
 
+// Setting up a GET route for /register that responds with a welcome message
 routes.get("/status", (req, res) => {
   res.send({ status: 200 });
 });
 
-// Setting up a GET route for /register that responds with a welcome message
-routes.get("/register", (req, res) => {
-  res.send("Welcome to Register ");
-});
+//Event
+routes.get("/event/:eventId", EventController.getEventById);
+routes.post("/event", upload.single("thumbnail"), EventController.createEvent);
 
 //User
 routes.post("/user/register", UserController.createUser);

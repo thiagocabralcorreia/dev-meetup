@@ -3,7 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const routes = require("./routes");
-
+const path = require("path");
 // Creating an Express app instance
 const app = express();
 
@@ -32,6 +32,7 @@ try {
   console.log(error);
 }
 
+app.use("/files", express.static(path.resolve(__dirname, "..", "files")));
 app.use(routes);
 
 // Starting the server and listening for incoming requests on the specified port

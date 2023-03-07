@@ -18,7 +18,7 @@ module.exports = {
         return res.json(user);
       }
       return res.status(400).json({
-        message: "Email already exist!  Do you want to login? ",
+        message: "email already exist!  do you want to login instead? ",
       });
     } catch (err) {
       throw Error(`Error while Registering new user :  ${err}`);
@@ -34,7 +34,7 @@ module.exports = {
       return res.json(user);
     } catch (error) {
       return res.status(400).json({
-        message: "User ID does not exist. Do you want to register?",
+        message: "User ID does not exist, do you want to register instead?",
       });
     }
   },
