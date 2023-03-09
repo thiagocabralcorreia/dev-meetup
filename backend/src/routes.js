@@ -14,7 +14,10 @@ routes.get("/status", (req, res) => {
 });
 
 //Event
+routes.get("/events/:category", EventController.getAllEvents);
+routes.get("/events", EventController.getAllEvents);
 routes.get("/event/:eventId", EventController.getEventById);
+routes.delete("/event/:eventId", EventController.deleteEvent);
 routes.post("/event", upload.single("thumbnail"), EventController.createEvent);
 
 //User
