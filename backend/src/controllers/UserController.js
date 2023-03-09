@@ -26,7 +26,7 @@ module.exports = {
   },
 
   async getUserById(req, res) {
-    // Extracting the user ID from the request parameters
+    // Extract the user ID from the request parameters
     const { userId } = req.params;
 
     try {

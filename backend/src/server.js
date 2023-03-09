@@ -1,27 +1,27 @@
-// Importing required packages
+// Import required packages
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const routes = require("./routes");
 const path = require("path");
-// Creating an Express app instance
+// Create an Express app instance
 const app = express();
 
-// Defining the port the server will listen to
+// Define the port the server will listen to
 const PORT = process.env.PORT || 8000;
 
-// Enabling Cross-Origin Resource Sharing (CORS)
+// Enable Cross-Origin Resource Sharing (CORS)
 app.use(cors());
 
-// Parsing incoming request data as JSON
+// Parse incoming request data as JSON
 app.use(express.json());
 
-// Setting environment variables based on the environment (development or production)
+// Set environment variables based on the environment (development or production)
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 
-// Connecting to MongoDB using the URI stored in the MONGO_DB_CONNECTION environment variable
+// Connectto MongoDB using the URI stored in the MONGO_DB_CONNECTION environment variable
 try {
   mongoose.connect(process.env.MONGO_DB_SECRET, {
     useNewUrlParser: true,
@@ -35,7 +35,7 @@ try {
 app.use("/files", express.static(path.resolve(__dirname, "..", "files")));
 app.use(routes);
 
-// Starting the server and listening for incoming requests on the specified port
+// Start the server and listen for incoming requests on the specified port
 app.listen(PORT, () => {
   console.log(`Listening on ${PORT}`);
 });

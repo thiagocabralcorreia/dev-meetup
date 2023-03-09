@@ -16,14 +16,14 @@ const EventSchema = new mongoose.Schema(
   },
   {
     toJSON: {
-      // defining options for how the model should be serialized to JSON
-      virtuals: true, // including virtual properties in the serialized output
+      // Define options for how the model should be serialized to JSON
+      virtuals: true, // Include virtual properties in the serialized output
     },
   }
 );
 
 EventSchema.virtual("thumbnail_url").get(function () {
-  // defining a virtual property for "thumbnail_url"
+  // Define a virtual property for "thumbnail_url"
   return `http://localhost:8000/files/${this.thumbnail}`;
 });
 
