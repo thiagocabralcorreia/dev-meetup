@@ -1,19 +1,20 @@
 const Event = require("../models/Event");
 
 module.exports = {
-  async getAllEvents(req, res) {
+  async getEventById(req, res) {
+    const { eventId } = req.params;
     try {
-      const events = await Event.find({}); // Find all events
+      const event = await Event.findById(eventId);
 
-      if (events) {
-        return res.json(events);
+      if (event) {
+        return res.json(event);
       }
     } catch (error) {
-      return res.status(400).json({ message: "We do not have any event yet!" });
+      return res.status(400).json({ message: "EventId does not exist!" });
     }
   },
 
-  async getEventsByCategory(req, res) {
+  async getAllEvents(req, res) {
     const { category } = req.params;
     const query = { category } || {};
 
@@ -24,7 +25,7 @@ module.exports = {
         return res.json(events);
       }
     } catch (error) {
-      return res.status(400).json({ message: "We do not have any events yet" });
+      return res.status(400).json({ message: "We do not have any event yet" });
     }
   },
 };
