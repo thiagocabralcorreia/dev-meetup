@@ -6,10 +6,9 @@ module.exports = {
     extend: {
       colors: {
         primary: "#FF4A9E",
+        secondary: "#E82E81",
         pblue: "#130E86",
         ppurple: "#9118B7",
-        sindigo: "#4941EA",
-        spurple: "#511E93",
       },
       fontFamily: {
         inter: ["Inter", "sans-serif"],
