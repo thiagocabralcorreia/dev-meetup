@@ -1,4 +1,6 @@
+import { motion } from "framer-motion";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import Input from "../components/Input";
 
 const Register = () => {
@@ -33,49 +35,58 @@ const Register = () => {
   return (
     <div className="form-wrapper">
       <form onSubmit={handleSubmit} className="form">
-        <h1 className="form-title">Register</h1>
-        <p className="form-subtitle">
-          Already Registered? <a className="form-link">Login here</a>
-        </p>
-        <Input
-          type="text"
-          placeholder="Email address"
-          id="firstName"
-          name="firstName"
-          value={firstName}
-          handleChange={handleFirstNameEmailChange}
-          isRequired
-        />
-        <Input
-          type="text"
-          placeholder="Email address"
-          id="lastName"
-          name="lastName"
-          value={lastName}
-          handleChange={handleLastNameChange}
-          isRequired
-        />
-        <Input
-          type="email"
-          placeholder="Email address"
-          id="email"
-          name="email"
-          value={email}
-          handleChange={handleEmailChange}
-          isRequired
-        />
-        <Input
-          type="password"
-          placeholder="Password"
-          id="password"
-          name="password"
-          value={password}
-          handleChange={handlePasswordChange}
-          isRequired
-        />
-        <button type="submit" className="form-buttom">
-          Register
-        </button>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ ease: "easeInOut", duration: 0.6, delay: 0.2 }}
+        >
+          <h1 className="form-title">Register</h1>
+          <p className="form-subtitle">
+            Already Registered?{" "}
+            <Link to={"/"} className="form-link">
+              Login here
+            </Link>
+          </p>
+          <Input
+            type="text"
+            placeholder="Email address"
+            id="firstName"
+            name="firstName"
+            value={firstName}
+            handleChange={handleFirstNameEmailChange}
+            isRequired
+          />
+          <Input
+            type="text"
+            placeholder="Email address"
+            id="lastName"
+            name="lastName"
+            value={lastName}
+            handleChange={handleLastNameChange}
+            isRequired
+          />
+          <Input
+            type="email"
+            placeholder="Email address"
+            id="email"
+            name="email"
+            value={email}
+            handleChange={handleEmailChange}
+            isRequired
+          />
+          <Input
+            type="password"
+            placeholder="Password"
+            id="password"
+            name="password"
+            value={password}
+            handleChange={handlePasswordChange}
+            isRequired
+          />
+          <button type="submit" className="form-buttom">
+            Register
+          </button>
+        </motion.div>
       </form>
     </div>
   );
