@@ -1,35 +1,37 @@
 import { motion } from "framer-motion";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Input from "../components/Input";
+import api from "../services/api";
 
 const Register = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleFirstNameEmailChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setFirstName(e.target.value);
-  };
-
-  const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLastName(e.target.value);
-  };
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(`Email: ${email}, Password: ${password}`);
+    console.log(
+      `FirstName: ${firstName}, LastName: ${lastName}, Email: ${email}, Password: ${password}`
+    );
+
+    const response = await api.post("/user/register", {
+      firstName,
+      lastName,
+      email,
+      password,
+    });
+    const userId = response.data._id || false;
+
+    if (userId) {
+      localStorage.setItem("user", userId);
+      navigate("/dashboard");
+    } else {
+      const { message } = response.data;
+      console.log(message);
+    }
   };
 
   return (
@@ -49,20 +51,20 @@ const Register = () => {
           </p>
           <Input
             type="text"
-            placeholder="Email address"
+            placeholder="First name"
             id="firstName"
             name="firstName"
             value={firstName}
-            handleChange={handleFirstNameEmailChange}
+            handleChange={(e) => setFirstName(e.target.value)}
             isRequired
           />
           <Input
             type="text"
-            placeholder="Email address"
+            placeholder="Last name"
             id="lastName"
             name="lastName"
             value={lastName}
-            handleChange={handleLastNameChange}
+            handleChange={(e) => setLastName(e.target.value)}
             isRequired
           />
           <Input
@@ -71,7 +73,7 @@ const Register = () => {
             id="email"
             name="email"
             value={email}
-            handleChange={handleEmailChange}
+            handleChange={(e) => setEmail(e.target.value)}
             isRequired
           />
           <Input
@@ -80,7 +82,7 @@ const Register = () => {
             id="password"
             name="password"
             value={password}
-            handleChange={handlePasswordChange}
+            handleChange={(e) => setPassword(e.target.value)}
             isRequired
           />
           <button type="submit" className="form-buttom">

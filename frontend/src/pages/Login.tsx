@@ -1,23 +1,30 @@
-import { motion } from "framer-motion";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import Input from "../components/Input";
+import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
-const Login = () => {
+import Input from "../components/Input";
+import api from "../services/api";
+
+const Login: React.FC = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(`Email: ${email}, Password: ${password}`);
+
+    const response = await api.post("/login", { email, password });
+    const userId = response.data._id || false;
+
+    if (userId) {
+      localStorage.setItem("user", userId);
+      navigate("/dashboard");
+      console.log("Success login!");
+    } else {
+      const { message } = response.data;
+      console.log("Error message:", message);
+    }
   };
 
   return (
@@ -41,7 +48,7 @@ const Login = () => {
             id="email"
             name="email"
             value={email}
-            handleChange={handleEmailChange}
+            handleChange={(e) => setEmail(e.target.value)}
             isRequired
           />
           <Input
@@ -50,7 +57,7 @@ const Login = () => {
             id="password"
             name="password"
             value={password}
-            handleChange={handlePasswordChange}
+            handleChange={(e) => setPassword(e.target.value)}
             isRequired
           />
           <button type="submit" className="form-buttom">
