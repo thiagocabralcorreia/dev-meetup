@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
+import FileInput from "../components/FileInput";
 import Input from "../components/Input";
 
 const CreateEvent = () => {
@@ -13,6 +14,10 @@ const CreateEvent = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+  };
+
+  const handleFileSelect = (file: File) => {
+    // do something with the selected file
   };
 
   return (
@@ -79,7 +84,7 @@ const CreateEvent = () => {
             <select
               className="h-11 rounded-3xl appearance-none relative block w-full px-4 py-2 mb-4
               bg-white placeholder-gray-600 text-gray-800 border border-gray-300
-              focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+              focus:outline-none focus:ring-primary focus:border-primary focus:z-10 text-sm"
               required
               value={category}
               onChange={(e) => setCategory(e.target.value)}
@@ -91,7 +96,10 @@ const CreateEvent = () => {
             </select>
           </div>
 
-          <div className="w-[62.5%] justify-center m-auto">
+          <div>
+            <FileInput onFileSelect={handleFileSelect} />
+          </div>
+          <div className="md:w-[62.5%] justify-center m-auto">
             <button type="submit" className="form-buttom">
               Create Event
             </button>

@@ -10,6 +10,8 @@ module.exports = {
         tertiary: "#3E2783",
         pblue: "#130E86",
         ppurple: "#9118B7",
+        "light-sky": "#00B5E6",
+        "dark-sky": "#06a6d3",
       },
       fontFamily: {
         inter: ["Inter", "sans-serif"],
