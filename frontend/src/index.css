@@ -17,7 +17,7 @@ code {
 }
 
 .form-wrapper {
-  @apply flex flex-col h-4/5 content-center justify-center;
+  @apply flex flex-col md:h-4/5 content-center justify-center;
 }
 
 .form {
@@ -25,15 +25,15 @@ code {
 }
 
 .form-title {
-  @apply text-center text-2xl md:text-3xl font-bold text-gray-800;
+  @apply text-center text-xl md:text-3xl font-bold text-tertiary;
 }
 
 .form-subtitle {
-  @apply mt-5 mb-10 text-center text-sm text-gray-600;
+  @apply mt-2 md:mt-5 mb-10 text-center text-sm text-gray-600;
 }
 
 .form-buttom {
-  @apply transition duration-150 ease-out hover:ease-in rounded-3xl w-full py-2 px-4 mt-2 font-bold bg-primary hover:bg-secondary text-white;
+  @apply h-11 transition duration-150 ease-out hover:ease-in rounded-3xl w-full py-2 px-4 mt-3 font-bold bg-primary hover:bg-secondary text-white;
 }
 
 .form-link {

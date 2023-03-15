@@ -28,7 +28,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="form-wrapper">
+    <div className="form-wrapper h-4/5">
       <form onSubmit={handleSubmit} className="form">
         <motion.div
           initial={{ opacity: 0 }}
