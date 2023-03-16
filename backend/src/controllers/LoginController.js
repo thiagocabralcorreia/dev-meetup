@@ -16,7 +16,7 @@ module.exports = {
       const user = await User.findOne({ email });
       if (!user) {
         return res.status(200).json({
-          message: "User not found! Do you want to register instead?",
+          message: "User not found!",
         });
       }
 
@@ -35,7 +35,7 @@ module.exports = {
       } else {
         return res
           .status(200)
-          .json({ message: "Email or Password does not match!" });
+          .json({ message: "Email and password do not match." });
       }
     } catch (error) {
       throw Error(`Error while Authenticating a User ${error}`);

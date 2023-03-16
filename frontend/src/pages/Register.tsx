@@ -27,7 +27,7 @@ const Register = () => {
 
     if (userId) {
       localStorage.setItem("user", userId);
-      navigate("/dashboard");
+      navigate("/");
     } else {
       const { message } = response.data;
       console.log(message);
@@ -85,7 +85,7 @@ const Register = () => {
             handleChange={(e) => setPassword(e.target.value)}
             isRequired
           />
-          <button type="submit" className="form-buttom">
+          <button type="submit" className="form-buttom btn-able">
             Register
           </button>
         </motion.div>

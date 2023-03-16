@@ -29,13 +29,33 @@ code {
 }
 
 .form-subtitle {
-  @apply mt-2 md:mt-5 mb-10 text-center text-sm text-gray-600;
+  @apply mt-2 md:mt-5 mb-7 md:mb-10 text-center content-center justify-center text-sm text-gray-600;
+}
+
+.form-error {
+  @apply text-sm text-danger;
 }
 
 .form-buttom {
-  @apply h-11 transition duration-150 ease-out hover:ease-in rounded-3xl w-full py-2 px-4 mt-3 max-sm:text-sm text-md font-bold bg-primary hover:bg-secondary text-white;
+  @apply h-11 transition duration-150 ease-out hover:ease-in rounded-3xl w-full py-2 px-4 mt-3 max-sm:text-sm text-md font-bold text-white;
+}
+
+.btn-able {
+  @apply bg-primary hover:bg-secondary;
+}
+
+.btn-disabled {
+  @apply bg-gray-300;
 }
 
 .form-link {
   @apply max-sm:block transition duration-150 ease-out hover:ease-in text-primary hover:text-secondary cursor-pointer;
+}
+
+.success-toast {
+  background-color: blue;
+}
+
+.error-toast {
+  background-color: #e6f4ea;
 }

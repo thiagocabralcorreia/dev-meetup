@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface FileInputProps {
   onFileSelect: (file: File) => void;
+  isSubmitting: boolean;
 }
 
-const FileInput: React.FC<FileInputProps> = ({ onFileSelect }) => {
+const FileInput: React.FC<FileInputProps> = ({
+  onFileSelect,
+  isSubmitting,
+}) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const fileName =
@@ -19,6 +23,10 @@ const FileInput: React.FC<FileInputProps> = ({ onFileSelect }) => {
       onFileSelect(file);
     }
   };
+
+  useEffect(() => {
+    setSelectedFile(null);
+  }, [isSubmitting]);
 
   return (
     <div

@@ -1,10 +1,16 @@
-import { motion } from "framer-motion";
 import { useState } from "react";
+import { motion } from "framer-motion";
+import { ToastContainer, toast } from "react-toastify";
+import { ClipLoader } from "react-spinners";
+import "react-toastify/dist/ReactToastify.css";
+
 import FileInput from "../components/FileInput";
 import Input from "../components/Input";
 import api from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 const CreateEvent = () => {
+  const navigate = useNavigate();
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [price, setPrice] = useState<string>("");
@@ -12,13 +18,18 @@ const CreateEvent = () => {
   const [category, setCategory] = useState<string>("");
   const [place, setPlace] = useState<string>("");
   const [date, setDate] = useState<string>("");
-  const [errorMessage, setErrorMessage] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   console.log({ thumbnail });
 
+  const toastSuccess = () =>
+    toast.success("Event created successfully! 🤘", { autoClose: 3000 });
+  const toastError = () =>
+    toast.error("Unable to create event. 😓", { autoClose: 3000 });
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    setIsSubmitting(true);
     const user_id = localStorage.getItem("user");
 
     const eventData = new FormData();
@@ -44,23 +55,32 @@ const CreateEvent = () => {
         console.log("Event has been sent");
         await api.post("/event", eventData, { headers: { user_id } });
         console.log(eventData);
-        console.log("Event has been saved");
-      } else {
-        setErrorMessage(true);
-        setTimeout(() => {
-          setErrorMessage(false);
-        }, 2000);
+        toastSuccess();
+        navigate("/dashboard");
 
-        console.log("Missing required data");
+        setIsSubmitting(false);
+        setTitle("");
+        setDescription("");
+        setPrice("");
+        setThumbnail(null);
+        setCategory("");
+        setPlace("");
+        setDate("");
+      } else {
+        toastError();
+        setIsSubmitting(false);
       }
     } catch (error) {
       Promise.reject(error);
       console.log(error);
+      setIsSubmitting(false);
+      toastError();
     }
   };
 
   return (
     <div className="form-wrapper">
+      <ToastContainer />
       <form onSubmit={handleSubmit} className="form w-4/5 md:w-[800px]">
         <motion.div
           initial={{ opacity: 0 }}
@@ -127,11 +147,24 @@ const CreateEvent = () => {
           </div>
 
           <div>
-            <FileInput onFileSelect={(file: File) => setThumbnail(file)} />
+            <FileInput
+              onFileSelect={(file: File) => setThumbnail(file)}
+              isSubmitting={isSubmitting}
+            />
           </div>
           <div className="md:w-[62.5%] justify-center m-auto">
-            <button type="submit" className="form-buttom">
-              Create Event
+            <button
+              type="submit"
+              className={`form-buttom ${
+                isSubmitting ? "btn-disabled" : "btn-able"
+              }`}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <ClipLoader color="#ffffff" size={18} className="m-1" />
+              ) : (
+                "Create Event"
+              )}
             </button>
           </div>
         </motion.div>
