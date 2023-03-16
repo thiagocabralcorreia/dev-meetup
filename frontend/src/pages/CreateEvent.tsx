@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import FileInput from "../components/FileInput";
 import Input from "../components/Input";
+import api from "../services/api";
 
 const CreateEvent = () => {
   const [title, setTitle] = useState<string>("");
@@ -11,13 +12,51 @@ const CreateEvent = () => {
   const [category, setCategory] = useState<string>("");
   const [place, setPlace] = useState<string>("");
   const [date, setDate] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<boolean>(false);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  console.log({ thumbnail });
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  };
 
-  const handleFileSelect = (file: File) => {
-    // do something with the selected file
+    const user_id = localStorage.getItem("user");
+
+    const eventData = new FormData();
+
+    eventData.append("title", title);
+    eventData.append("description", description);
+    eventData.append("price", price);
+    eventData.append("place", place);
+    eventData.append("date", date);
+    eventData.append("thumbnail", thumbnail!);
+    eventData.append("category", category);
+
+    try {
+      if (
+        title !== "" &&
+        description !== "" &&
+        price !== "" &&
+        place !== "" &&
+        date !== "" &&
+        category !== "" &&
+        thumbnail !== null
+      ) {
+        console.log("Event has been sent");
+        await api.post("/event", eventData, { headers: { user_id } });
+        console.log(eventData);
+        console.log("Event has been saved");
+      } else {
+        setErrorMessage(true);
+        setTimeout(() => {
+          setErrorMessage(false);
+        }, 2000);
+
+        console.log("Missing required data");
+      }
+    } catch (error) {
+      Promise.reject(error);
+      console.log(error);
+    }
   };
 
   return (
@@ -48,15 +87,6 @@ const CreateEvent = () => {
               handleChange={(e) => setDescription(e.target.value)}
               isRequired
             />
-            {/* <input
-            type="file"
-            onChange={(e) => setThumbnail(e.target.files[0])}
-          />
-          <img
-            src={cameraIcon}
-            style={{ maxWidth: "50px" }}
-            alt="upload icon image"
-          /> */}
             <Input
               type="text"
               placeholder="Place"
@@ -97,7 +127,7 @@ const CreateEvent = () => {
           </div>
 
           <div>
-            <FileInput onFileSelect={handleFileSelect} />
+            <FileInput onFileSelect={(file: File) => setThumbnail(file)} />
           </div>
           <div className="md:w-[62.5%] justify-center m-auto">
             <button type="submit" className="form-buttom">

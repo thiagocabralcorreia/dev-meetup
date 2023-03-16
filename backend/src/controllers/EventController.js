@@ -3,7 +3,7 @@ const User = require("../models/User");
 
 module.exports = {
   async createEvent(req, res) {
-    const { title, description, price, place, category } = req.body;
+    const { title, description, price, place, date, category } = req.body;
     const { user_id } = req.headers;
     const { filename } = req.file;
 
@@ -18,6 +18,7 @@ module.exports = {
       title,
       description,
       place,
+      date,
       category,
       price: parseFloat(price), // Convert to a number
       user: user_id,
