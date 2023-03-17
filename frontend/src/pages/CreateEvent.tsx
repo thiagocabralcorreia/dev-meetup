@@ -89,18 +89,20 @@ const CreateEvent = () => {
               placeholder="Title"
               id="title"
               name="title"
+              maxLength={32}
               value={title}
               handleChange={(e) => setTitle(e.target.value)}
-              isRequired
+              required
             />
             <Input
               type="text"
               placeholder="Description"
               id="description"
               name="description"
+              maxLength={76}
               value={description}
               handleChange={(e) => setDescription(e.target.value)}
-              isRequired
+              required
             />
             <Input
               type="text"
@@ -108,14 +110,15 @@ const CreateEvent = () => {
               id="place"
               name="place"
               value={place}
+              maxLength={40}
               handleChange={(e) => setPlace(e.target.value)}
-              isRequired
+              required
             />
             <Input
               type="date"
               value={date}
               handleChange={(e) => setDate(e.target.value)}
-              isRequired
+              required
             />
             <Input
               type="text"
@@ -123,8 +126,9 @@ const CreateEvent = () => {
               id="price"
               name="price"
               value={price}
+              maxLength={5}
               handleChange={(e) => setPrice(e.target.value)}
-              isRequired
+              required
             />
             <select
               className="h-11 rounded-3xl appearance-none relative block w-full px-4 py-2 mb-4

@@ -8,7 +8,7 @@ function Header() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ ease: "easeInOut", duration: 0.6, delay: 0.2 }}
-      className="flex py-6 px-16"
+      className="absolute flex py-6 px-16 z-50"
     >
       <Link to={"/"}>
         <div className="flex content-center gap-4">

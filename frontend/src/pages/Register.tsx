@@ -46,8 +46,6 @@ const Register = () => {
           });
           const userId = response.data._id || false;
 
-          console.log(userId);
-
           if (userId) {
             // If everything is ok, register, login and navigate to the dashboard
             localStorage.setItem("user", userId);
@@ -107,7 +105,7 @@ const Register = () => {
             name="firstName"
             value={firstName}
             handleChange={(e) => setFirstName(e.target.value)}
-            isRequired
+            required
           />
           <Input
             type="text"
@@ -116,7 +114,7 @@ const Register = () => {
             name="lastName"
             value={lastName}
             handleChange={(e) => setLastName(e.target.value)}
-            isRequired
+            required
           />
           <Input
             type="email"
@@ -125,7 +123,7 @@ const Register = () => {
             name="email"
             value={email}
             handleChange={(e) => setEmail(e.target.value)}
-            isRequired
+            required
           />
           <Input
             type="password"
@@ -134,7 +132,7 @@ const Register = () => {
             name="password"
             value={password}
             handleChange={(e) => setPassword(e.target.value)}
-            isRequired
+            required
           />
 
           {errorMessage && (

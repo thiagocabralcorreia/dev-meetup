@@ -68,7 +68,7 @@ const Login: React.FC = () => {
             name="email"
             value={email}
             handleChange={(e) => setEmail(e.target.value)}
-            isRequired
+            required
           />
 
           <div className="relative">
@@ -79,7 +79,7 @@ const Login: React.FC = () => {
               name="password"
               value={password}
               handleChange={(e) => setPassword(e.target.value)}
-              isRequired
+              required
             />
             <button
               type="button"
