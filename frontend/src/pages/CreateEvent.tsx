@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ToastContainer, toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -8,6 +7,7 @@ import FileInput from "../components/FileInput";
 import Input from "../components/Input";
 import api from "../services/api";
 import { useNavigate } from "react-router-dom";
+import { FaExclamationCircle } from "react-icons/fa";
 
 const CreateEvent = () => {
   const navigate = useNavigate();
@@ -19,11 +19,7 @@ const CreateEvent = () => {
   const [place, setPlace] = useState<string>("");
   const [date, setDate] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-
-  const toastSuccess = () =>
-    toast.success("Event created successfully! 🤘", { autoClose: 3000 });
-  const toastError = () =>
-    toast.error("Unable to create event. 😓", { autoClose: 3000 });
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -55,7 +51,6 @@ const CreateEvent = () => {
         await api.post("/event", eventData, { headers: { user_id } });
 
         console.log(eventData);
-        toastSuccess();
         navigate("/dashboard");
 
         setIsSubmitting(false);
@@ -67,20 +62,20 @@ const CreateEvent = () => {
         setPlace("");
         setDate("");
       } else {
-        toastError();
+        setTimeout(() => {
+          setErrorMessage("Unable to create event.");
+        }, 2000);
         setIsSubmitting(false);
       }
     } catch (error) {
       Promise.reject(error);
       console.log(error);
       setIsSubmitting(false);
-      toastError();
     }
   };
 
   return (
     <div className="form-wrapper">
-      <ToastContainer />
       <form onSubmit={handleSubmit} className="form w-4/5 md:w-[800px]">
         <motion.div
           initial={{ opacity: 0 }}
@@ -152,6 +147,17 @@ const CreateEvent = () => {
               isSubmitting={isSubmitting}
             />
           </div>
+          {errorMessage && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ ease: "easeInOut", duration: 0.6, delay: 0.2 }}
+              className="h-5 flex gap-x-2 mt-[-8px] mb-2 content-center"
+            >
+              <FaExclamationCircle className="text-danger self-center" />
+              <p className="form-error">{errorMessage}</p>
+            </motion.div>
+          )}
           <div className="md:w-[62.5%] justify-center m-auto">
             <button
               type="submit"

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 import { FaExclamationCircle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
@@ -14,6 +15,9 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+
+  const toastSuccess = () =>
+    toast.success("Account registered successfully! 🤘", { autoClose: 2000 });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -40,14 +44,19 @@ const Register = () => {
             firstName,
             lastName,
           });
-          const user = response.data.user || false;
           const userId = response.data._id || false;
 
-          if (user && userId) {
+          console.log(userId);
+
+          if (userId) {
             // If everything is ok, register, login and navigate to the dashboard
             localStorage.setItem("user", userId);
-            setIsSubmitting(false);
-            navigate("/dashboard");
+
+            toastSuccess();
+            setTimeout(() => {
+              navigate("/dashboard");
+              setIsSubmitting(false);
+            }, 2000);
           } else {
             const { message } = response.data;
             setErrorMessage(message);
@@ -77,6 +86,7 @@ const Register = () => {
 
   return (
     <div className="form-wrapper">
+      <ToastContainer />
       <form onSubmit={handleSubmit} className="form">
         <motion.div
           initial={{ opacity: 0 }}
