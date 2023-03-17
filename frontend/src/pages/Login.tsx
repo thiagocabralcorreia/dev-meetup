@@ -5,14 +5,15 @@ import { motion } from "framer-motion";
 import Input from "../components/Input";
 import api from "../services/api";
 import { ClipLoader } from "react-spinners";
-import { FaExclamationCircle } from "react-icons/fa";
+import { FaExclamationCircle, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -63,15 +64,26 @@ const Login: React.FC = () => {
             handleChange={(e) => setEmail(e.target.value)}
             isRequired
           />
-          <Input
-            type="password"
-            placeholder="Password"
-            id="password"
-            name="password"
-            value={password}
-            handleChange={(e) => setPassword(e.target.value)}
-            isRequired
-          />
+
+          <div className="relative">
+            <Input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              id="password"
+              name="password"
+              value={password}
+              handleChange={(e) => setPassword(e.target.value)}
+              isRequired
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute inset-y-0 right-2 flex items-center justify-center p-2 z-10 text-gray-800"
+            >
+              {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+            </button>
+          </div>
+
           {errorMessage && (
             <motion.div
               initial={{ opacity: 0 }}

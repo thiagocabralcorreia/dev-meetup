@@ -53,7 +53,9 @@ const CreateEvent = () => {
         thumbnail !== null
       ) {
         console.log("Event has been sent");
+
         await api.post("/event", eventData, { headers: { user_id } });
+
         console.log(eventData);
         toastSuccess();
         navigate("/dashboard");
