@@ -20,8 +20,6 @@ const CreateEvent = () => {
   const [date, setDate] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  console.log({ thumbnail });
-
   const toastSuccess = () =>
     toast.success("Event created successfully! 🤘", { autoClose: 3000 });
   const toastError = () =>

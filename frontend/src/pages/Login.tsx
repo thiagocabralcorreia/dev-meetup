@@ -5,7 +5,8 @@ import { motion } from "framer-motion";
 import Input from "../components/Input";
 import api from "../services/api";
 import { ClipLoader } from "react-spinners";
-import { FaExclamationCircle, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { FaExclamationCircle } from "react-icons/fa";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -24,20 +25,25 @@ const Login: React.FC = () => {
     const response = await api.post("/login", { email, password });
     const userId = response.data._id || false;
 
-    if (userId) {
-      localStorage.setItem("user", userId);
-      navigate("/dashboard");
+    try {
+      if (userId) {
+        // If everything is ok, login and navigate to the dashboard
+        localStorage.setItem("user", userId);
+        navigate("/dashboard");
 
-      console.log("Success login!");
-      setEmail("");
-      setPassword("");
-      setIsSubmitting(false);
-    } else {
-      const { message } = response.data;
-      console.log("Error message:", message);
-      setErrorMessage(message);
-      setIsSubmitting(false);
-    }
+        console.log("Success login!");
+        setEmail("");
+        setPassword("");
+        setIsSubmitting(false);
+      } else {
+        const { message } = response.data;
+
+        setTimeout(() => {
+          setErrorMessage(message);
+          setIsSubmitting(false);
+        }, 2000);
+      }
+    } catch (error) {}
   };
 
   return (
@@ -78,9 +84,10 @@ const Login: React.FC = () => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-2 flex items-center justify-center p-2 z-10 text-gray-800"
+              className="absolute inset-y-0 right-2 flex items-center justify-center
+              p-2 z-10 opacity-50 text-lg text-tertiary"
             >
-              {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+              {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
             </button>
           </div>
 

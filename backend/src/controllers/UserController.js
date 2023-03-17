@@ -38,4 +38,13 @@ module.exports = {
       });
     }
   },
+
+  async getAllUsers(req, res) {
+    try {
+      const users = await User.find().select("-password");
+      return res.json(users);
+    } catch (error) {
+      return res.status(400).json({ message: "We do not have any user yet" });
+    }
+  },
 };
