@@ -50,5 +50,6 @@ routes.delete("/event/:eventId", EventController.deleteEvent);
 routes.post("/user/register", UserController.createUser);
 routes.get("/user/:userId", UserController.getUserById);
 routes.get("/user", UserController.getAllUsers);
+routes.delete("/user/:userId", UserController.deleteUser);
 
 module.exports = routes;

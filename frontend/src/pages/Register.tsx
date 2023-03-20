@@ -52,7 +52,7 @@ const Register = () => {
 
             toastSuccess();
             setTimeout(() => {
-              navigate("/dashboard");
+              navigate("/");
               setIsSubmitting(false);
             }, 2000);
           } else {

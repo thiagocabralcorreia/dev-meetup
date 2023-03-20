@@ -47,4 +47,17 @@ module.exports = {
       return res.status(400).json({ message: "We do not have any user yet" });
     }
   },
+
+  async deleteUser(req, res) {
+    const { userId } = req.params;
+
+    try {
+      await User.findByIdAndDelete(userId);
+      return res.status(204).send(); // 204 indicate that the request was successful but there is no response body
+    } catch (error) {
+      return res
+        .status(400)
+        .json({ message: "We do not have any user with the ID yet" });
+    }
+  },
 };

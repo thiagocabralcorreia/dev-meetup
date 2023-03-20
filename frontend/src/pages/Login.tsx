@@ -29,7 +29,7 @@ const Login: React.FC = () => {
       if (userId) {
         // If everything is ok, login and navigate to the dashboard
         localStorage.setItem("user", userId);
-        navigate("/dashboard");
+        navigate("/");
 
         console.log("Success login!");
         setEmail("");
