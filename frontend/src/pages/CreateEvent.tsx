@@ -1,13 +1,23 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ClipLoader } from "react-spinners";
+import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 
+import api from "../services/api";
+import { FaExclamationCircle } from "react-icons/fa";
 import FileInput from "../components/FileInput";
 import Input from "../components/Input";
-import api from "../services/api";
-import { useNavigate } from "react-router-dom";
-import { FaExclamationCircle } from "react-icons/fa";
+import Select from "../components/Select";
+import { CategorySchema } from "../types/category";
+
+const categories = [
+  { value: "", name: "Select a category" },
+  { value: "frontend", name: "Front-end" },
+  { value: "backend", name: "Back-end" },
+  { value: "fullstack", name: "Full Stack" },
+  { value: "miscellaneous", name: "Miscellaneous" },
+];
 
 const CreateEvent = () => {
   const navigate = useNavigate();
@@ -15,6 +25,7 @@ const CreateEvent = () => {
   const [description, setDescription] = useState<string>("");
   const [price, setPrice] = useState<string>("");
   const [thumbnail, setThumbnail] = useState<File | null>(null);
+  const [selected, setSelected] = useState<CategorySchema>(categories[0]);
   const [category, setCategory] = useState<string>("");
   const [place, setPlace] = useState<string>("");
   const [date, setDate] = useState<string>("");
@@ -51,7 +62,7 @@ const CreateEvent = () => {
         await api.post("/event", eventData, { headers: { user_id } });
 
         console.log(eventData);
-        navigate("/dashboard");
+        navigate("/");
 
         setIsSubmitting(false);
         setTitle("");
@@ -63,7 +74,7 @@ const CreateEvent = () => {
         setDate("");
       } else {
         setTimeout(() => {
-          setErrorMessage("Unable to create event.");
+          setErrorMessage("Please fill in all fields correctly.");
         }, 2000);
         setIsSubmitting(false);
       }
@@ -130,9 +141,25 @@ const CreateEvent = () => {
               handleChange={(e) => setPrice(e.target.value)}
               required
             />
-            <select
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ ease: "easeInOut", duration: 0.6, delay: 0.2 }}
+              className="w-full"
+            >
+              <Select
+                selected={selected}
+                categories={categories}
+                onChange={setSelected}
+                className="flex justify-between h-11 rounded-3xl appearance-none relative w-full px-4 py-2 mb-4
+                cursor-pointer bg-white placeholder-gray-600 text-gray-800 border border-gray-300
+                focus:outline-none focus:ring-primary focus:border-primary focus:z-10 text-sm"
+              />
+            </motion.div>
+            {/* <select
               className="h-11 rounded-3xl appearance-none relative block w-full px-4 py-2 mb-4
-              bg-white placeholder-gray-600 text-gray-800 border border-gray-300
+              cursor-pointer bg-white placeholder-gray-600 text-gray-800 border border-gray-300
               focus:outline-none focus:ring-primary focus:border-primary focus:z-10 text-sm"
               required
               value={category}
@@ -141,8 +168,9 @@ const CreateEvent = () => {
               <option value="">Select a category</option>
               <option value="frontend">Front-end</option>
               <option value="backend">Back-end</option>
-              <option value="fullstack">Fullstack</option>
-            </select>
+              <option value="fullstack">Full Stack</option>
+              <option value="miscellaneous">Miscellaneous</option>
+            </select> */}
           </div>
 
           <div>

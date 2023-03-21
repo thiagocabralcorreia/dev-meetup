@@ -12,6 +12,8 @@ module.exports = {
         ppurple: "#9118B7",
         "light-sky": "#00B5E6",
         "dark-sky": "#06a6d3",
+        "light-orange": "#DB5A3C",
+        "dark-orange": "#C6503B",
         danger: "#DC3444",
       },
       fontFamily: {

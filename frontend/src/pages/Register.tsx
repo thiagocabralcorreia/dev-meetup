@@ -61,7 +61,6 @@ const Register = () => {
 
             setTimeout(() => {
               setIsSubmitting(false);
-              setErrorMessage("");
             }, 2000);
           }
         } else {
@@ -77,7 +76,6 @@ const Register = () => {
 
       setTimeout(() => {
         setIsSubmitting(false);
-        setErrorMessage("");
       }, 2000);
     }
   };
