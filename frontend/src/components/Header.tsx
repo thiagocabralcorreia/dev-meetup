@@ -22,7 +22,7 @@ function Header() {
         to={"/event"}
         className="my-auto cursor-pointer text-white hover:text-primary transition duration-150 ease-out hover:ease-in"
       >
-        <FaPlusCircle className="text-md md:text-xl" />
+        <FaPlusCircle className="text-[20px] md:text-[30px]" />
       </Link>
     </motion.div>
   );

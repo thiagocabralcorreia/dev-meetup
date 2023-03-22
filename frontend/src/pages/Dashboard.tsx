@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 import api from "../services/api";
 import { EventSchema } from "../types/events";
@@ -6,11 +7,12 @@ import { CategorySchema } from "../types/category";
 import Select from "../components/Select";
 import { eventCategory } from "../utils/eventCategory";
 import EventCard from "../components/EventCard";
-import { motion } from "framer-motion";
+import { formatDate } from "../utils/formatDate";
 
 const categories = [
   { value: "", name: "All categories" },
   { value: "", name: "All categories" },
+  { value: "myevents", name: "My Events" },
   { value: "frontend", name: "Front-end" },
   { value: "backend", name: "Back-end" },
   { value: "fullstack", name: "Full Stack" },
@@ -18,12 +20,19 @@ const categories = [
 ];
 
 const Dashboard = () => {
+  const user_id = localStorage.getItem("user");
   const [events, setEvents] = useState<EventSchema[]>([]);
   const [selected, setSelected] = useState<CategorySchema>(categories[0]);
 
-  const filterHandler = (query: CategorySchema) => {
-    setSelected(query);
-    getEvents(query.value);
+  const filterHandler = async (query: CategorySchema) => {
+    if (query.value === "myevents") {
+      setSelected({ value: "myevents", name: "My Events" });
+      const response = await api.get("user/events", { headers: { user_id } });
+      setEvents(response.data);
+    } else {
+      setSelected(query);
+      getEvents(query.value);
+    }
   };
 
   const getEvents = async (filter: string) => {
@@ -33,6 +42,8 @@ const Dashboard = () => {
     setEvents(response.data);
   };
 
+  const newestEvents = events.slice().reverse();
+
   useEffect(() => {
     getEvents(selected.value);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -41,9 +52,9 @@ const Dashboard = () => {
   return (
     <div className="header-height min-h-screen pb-5">
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ ease: "easeInOut", duration: 0.6, delay: 0.2 }}
+        initial={{ opacity: 0, x: -180 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ ease: "easeInOut", duration: 0.9, delay: 0.2 }}
         className="w-72"
       >
         <Select
@@ -61,7 +72,7 @@ const Dashboard = () => {
         className="grid grid-cols-1 min-[970px]:grid-cols-2 min-[1400px]:lg:grid-cols-3
       max-sm:m-2 max-sm:mt-12 m-16 gap-x-8"
       >
-        {events.map((event) => (
+        {newestEvents.map((event) => (
           <EventCard
             key={event.id}
             eventId={event.id}
@@ -70,7 +81,7 @@ const Dashboard = () => {
             image={event.thumbnail_url}
             title={event.title}
             description={event.description}
-            date={event.date}
+            date={formatDate(event.date)}
             place={event.place}
             price={event.price}
           />

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaDollarSign, FaHeart, FaRegHeart } from "react-icons/fa";
 import { FiCalendar, FiMapPin } from "react-icons/fi";
 
@@ -37,7 +37,7 @@ const EventCard: React.FC<EventCardProps> = ({
       initial={{ opacity: 0, x: -180 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ ease: "easeInOut", duration: 0.9, delay: 0.2 }}
-      className="relative self-center max-[940px]:m-auto max-sm:w-80 w-full pt-10 max-[940px]:mb-[50px] mb-14"
+      className="relative max-[940px]:m-auto max-sm:w-80 w-full pt-10 max-[940px]:mb-[50px] mb-14"
     >
       <div className="absolute  mx-auto top-0 left-0 right-0 px-3 max-sm:w-80 w-96 h-48 z-10">
         <div className="relative">

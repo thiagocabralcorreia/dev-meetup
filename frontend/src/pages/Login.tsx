@@ -67,6 +67,7 @@ const Login: React.FC = () => {
             id="email"
             name="email"
             value={email}
+            maxLength={50}
             handleChange={(e) => setEmail(e.target.value)}
             required
           />
@@ -77,6 +78,7 @@ const Login: React.FC = () => {
               placeholder="Password"
               id="password"
               name="password"
+              maxLength={50}
               value={password}
               handleChange={(e) => setPassword(e.target.value)}
               required

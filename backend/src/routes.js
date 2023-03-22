@@ -41,6 +41,7 @@ routes.post(
 routes.get("/dashboard/:category", DashboardController.getAllEvents);
 routes.get("/dashboard", DashboardController.getAllEvents);
 routes.get("/event/:eventId", DashboardController.getEventById);
+routes.get("/user/events", DashboardController.getEventsByUserId);
 
 // Events
 routes.post("/event", upload.single("thumbnail"), EventController.createEvent);

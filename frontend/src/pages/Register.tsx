@@ -102,6 +102,7 @@ const Register = () => {
             id="firstName"
             name="firstName"
             value={firstName}
+            maxLength={60}
             handleChange={(e) => setFirstName(e.target.value)}
             required
           />
@@ -111,6 +112,7 @@ const Register = () => {
             id="lastName"
             name="lastName"
             value={lastName}
+            maxLength={60}
             handleChange={(e) => setLastName(e.target.value)}
             required
           />
@@ -119,6 +121,7 @@ const Register = () => {
             placeholder="Email address"
             id="email"
             name="email"
+            maxLength={50}
             value={email}
             handleChange={(e) => setEmail(e.target.value)}
             required
@@ -128,6 +131,7 @@ const Register = () => {
             placeholder="Password"
             id="password"
             name="password"
+            maxLength={50}
             value={password}
             handleChange={(e) => setPassword(e.target.value)}
             required

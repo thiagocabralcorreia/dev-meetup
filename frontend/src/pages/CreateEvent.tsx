@@ -26,7 +26,7 @@ const CreateEvent = () => {
   const [price, setPrice] = useState<string>("");
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [selected, setSelected] = useState<CategorySchema>(categories[0]);
-  const [category, setCategory] = useState<string>("");
+  const [category, setCategory] = useState<string>(selected.value);
   const [place, setPlace] = useState<string>("");
   const [date, setDate] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -35,6 +35,8 @@ const CreateEvent = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSubmitting(true);
+    setCategory(selected.value);
+
     const user_id = localStorage.getItem("user");
 
     const eventData = new FormData();
@@ -61,7 +63,6 @@ const CreateEvent = () => {
 
         await api.post("/event", eventData, { headers: { user_id } });
 
-        console.log(eventData);
         navigate("/");
 
         setIsSubmitting(false);
@@ -128,6 +129,7 @@ const CreateEvent = () => {
             <Input
               type="date"
               value={date}
+              maxLength={100}
               handleChange={(e) => setDate(e.target.value)}
               required
             />
@@ -157,20 +159,6 @@ const CreateEvent = () => {
                 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 text-sm"
               />
             </motion.div>
-            {/* <select
-              className="h-11 rounded-3xl appearance-none relative block w-full px-4 py-2 mb-4
-              cursor-pointer bg-white placeholder-gray-600 text-gray-800 border border-gray-300
-              focus:outline-none focus:ring-primary focus:border-primary focus:z-10 text-sm"
-              required
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option value="">Select a category</option>
-              <option value="frontend">Front-end</option>
-              <option value="backend">Back-end</option>
-              <option value="fullstack">Full Stack</option>
-              <option value="miscellaneous">Miscellaneous</option>
-            </select> */}
           </div>
 
           <div>
@@ -190,7 +178,13 @@ const CreateEvent = () => {
               <p className="form-error">{errorMessage}</p>
             </motion.div>
           )}
-          <div className="md:w-[62.5%] justify-center m-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6">
+            <button
+              className="form-buttom bg-primary hover:bg-secondary opacity-80"
+              onClick={() => navigate("/")}
+            >
+              Cancel
+            </button>
             <button
               type="submit"
               className={`form-buttom ${
