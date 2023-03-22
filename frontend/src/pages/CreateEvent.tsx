@@ -32,10 +32,26 @@ const CreateEvent = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
+  console.log({ setSelected });
+  console.log(
+    "category:",
+    category,
+    title,
+    description,
+    price,
+    place,
+    date,
+    thumbnail
+  );
+
+  const categoryHandler = async (selectedCategory: CategorySchema) => {
+    setSelected(selectedCategory);
+    setCategory(selectedCategory.value);
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSubmitting(true);
-    setCategory(selected.value);
 
     const user_id = localStorage.getItem("user");
 
@@ -48,7 +64,6 @@ const CreateEvent = () => {
     eventData.append("date", date);
     eventData.append("thumbnail", thumbnail!);
     eventData.append("category", category);
-
     try {
       if (
         title !== "" &&
@@ -153,7 +168,7 @@ const CreateEvent = () => {
               <Select
                 selected={selected}
                 categories={categories}
-                onChange={setSelected}
+                onChange={categoryHandler}
                 className="flex justify-between h-11 rounded-3xl appearance-none relative w-full px-4 py-2 mb-4
                 cursor-pointer bg-white placeholder-gray-600 text-gray-800 border border-gray-300
                 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 text-sm"
@@ -180,7 +195,7 @@ const CreateEvent = () => {
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6">
             <button
-              className="form-buttom bg-primary hover:bg-secondary opacity-80"
+              className="form-buttom btn-cancel"
               onClick={() => navigate("/")}
             >
               Cancel

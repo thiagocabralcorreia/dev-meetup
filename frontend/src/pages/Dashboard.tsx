@@ -8,6 +8,8 @@ import Select from "../components/Select";
 import { eventCategory } from "../utils/eventCategory";
 import EventCard from "../components/EventCard";
 import { formatDate } from "../utils/formatDate";
+import { toast } from "react-toastify";
+import Modal from "../components/Modal";
 
 const categories = [
   { value: "", name: "All categories" },
@@ -22,7 +24,10 @@ const categories = [
 const Dashboard = () => {
   const user_id = localStorage.getItem("user");
   const [events, setEvents] = useState<EventSchema[]>([]);
+  const [selectedEventId, setSelectedEventId] = useState<string>("");
   const [selected, setSelected] = useState<CategorySchema>(categories[0]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [canDelete, setCanDelete] = useState<boolean>(false);
 
   const filterHandler = async (query: CategorySchema) => {
     if (query.value === "myevents") {
@@ -42,15 +47,52 @@ const Dashboard = () => {
     setEvents(response.data);
   };
 
+  const toastSuccess = () =>
+    toast.success("The event was deleted successfully!", { autoClose: 2000 });
+
+  const toastError = () =>
+    toast.error("Error when deleting event!", { autoClose: 2000 });
+
+  const deleteEventHandler = async (eventId: string) => {
+    setCanDelete(true);
+    try {
+      await api.delete(`/event/${eventId}`);
+      setIsOpen(false);
+
+      setTimeout(() => {
+        toastSuccess();
+        setCanDelete(false);
+      }, 2000);
+    } catch (error) {
+      setIsOpen(false);
+
+      setTimeout(() => {
+        toastError();
+        setCanDelete(false);
+      }, 2000);
+    }
+  };
+
+  const onModelOpen = async (eventId: string) => {
+    // Open delete confirmation modal
+    setIsOpen(true);
+    setSelectedEventId(eventId);
+  };
+
   const newestEvents = events.slice().reverse();
 
   useEffect(() => {
     getEvents(selected.value);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [canDelete]);
 
   return (
     <div className="header-height min-h-screen pb-5">
+      <Modal
+        isOpen={isOpen}
+        closeModal={() => setIsOpen(false)}
+        onDelete={() => deleteEventHandler(selectedEventId)}
+      />
       <motion.div
         initial={{ opacity: 0, x: -180 }}
         animate={{ opacity: 1, x: 0 }}
@@ -84,6 +126,8 @@ const Dashboard = () => {
             date={formatDate(event.date)}
             place={event.place}
             price={event.price}
+            isEditable={event.user === user_id}
+            deleteHandler={() => onModelOpen(event.id)}
           />
         ))}
       </div>

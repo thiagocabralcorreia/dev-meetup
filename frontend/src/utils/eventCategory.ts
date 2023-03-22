@@ -6,6 +6,8 @@ export const eventCategory = (category: string) => {
       return "Front-end";
     case "backend":
       return "Back-end";
+    case "miscellaneous":
+      return "Miscellaneous";
     default:
       return "";
   }

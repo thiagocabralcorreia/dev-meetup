@@ -52,6 +52,10 @@ code {
   @apply bg-gray-300;
 }
 
+.btn-cancel {
+  @apply bg-primary hover:bg-secondary opacity-80;
+}
+
 .form-link {
   @apply max-sm:block transition duration-150 ease-out hover:ease-in text-primary hover:text-secondary cursor-pointer;
 }

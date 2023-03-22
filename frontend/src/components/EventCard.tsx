@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FaDollarSign, FaHeart, FaRegHeart } from "react-icons/fa";
 import { FiCalendar, FiMapPin } from "react-icons/fi";
+import MenuDropdown from "./MenuDropdown";
 
 interface EventCardProps {
   eventId: string;
@@ -13,6 +14,8 @@ interface EventCardProps {
   place: string;
   price: number;
   description: string;
+  isEditable: boolean;
+  deleteHandler?: () => void;
 }
 
 const EventCard: React.FC<EventCardProps> = ({
@@ -25,6 +28,8 @@ const EventCard: React.FC<EventCardProps> = ({
   place,
   price,
   description,
+  isEditable,
+  deleteHandler,
 }) => {
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
@@ -54,9 +59,16 @@ const EventCard: React.FC<EventCardProps> = ({
       <div className="relative mx-auto max-sm:w-80 w-96 bg-white rounded-lg shadow-lg overflow-hidden">
         <div className="pt-40" />
         <div className="pt-2 px-4">
-          <div className="flex items-center gap-x-1 mb-2 text-sm text-gray-500">
-            <FiMapPin />
-            <div>{place}</div>
+          <div className="flex justify-between content-center">
+            <div className="flex items-center gap-x-1 mb-2 text-sm text-gray-500">
+              <FiMapPin />
+              <div>{place}</div>
+            </div>
+            {isEditable ? (
+              <MenuDropdown deleteHandler={deleteHandler} />
+            ) : (
+              <></>
+            )}
           </div>
           <div className="font-bold text-xl text-pblue">{title}</div>
           <div className="text-md text-gray-600 mb-5 whitespace-pre-line">
@@ -80,7 +92,7 @@ const EventCard: React.FC<EventCardProps> = ({
                 />
               ) : (
                 <FaRegHeart
-                  className="cursor-pointer text-gray-500"
+                  className="cursor-pointer transition duration-150 ease-out hover:ease-in text-gray-500 hover:text-primary"
                   onClick={handleFavoriteClick}
                 />
               )}

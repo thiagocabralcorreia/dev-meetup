@@ -14,7 +14,7 @@ module.exports = {
         "dark-sky": "#06a6d3",
         "light-pink": "#fb6fb0",
         "dark-pink": "#e45397",
-        danger: "#DC3444",
+        danger: "#F11348",
       },
       fontFamily: {
         inter: ["Inter", "sans-serif"],

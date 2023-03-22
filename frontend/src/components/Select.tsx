@@ -40,7 +40,7 @@ const Select: React.FC<SelectProps> = ({
           leaveTo="hidden relative"
         >
           <Listbox.Options
-            className={`absolute max-h-60 w-full overflow-auto rounded-3xl bg-white py-1 text-base
+            className={`absolute max-h-64 w-full overflow-auto rounded-3xl bg-white py-1 text-base
             shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm ${left}`}
           >
             {categories.map(
