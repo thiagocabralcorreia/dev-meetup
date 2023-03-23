@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { ClipLoader } from "react-spinners";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
+import { ClipLoader } from "react-spinners";
+import { motion } from "framer-motion";
+import { FaExclamationCircle } from "react-icons/fa";
 
 import api from "../services/api";
-import { FaExclamationCircle } from "react-icons/fa";
 import FileInput from "../components/FileInput";
 import Input from "../components/Input";
 import Select from "../components/Select";
+
 import { CategorySchema } from "../types/category";
 
 const categories = [
@@ -21,6 +21,7 @@ const categories = [
 
 const CreateEvent = () => {
   const navigate = useNavigate();
+  const user = localStorage.getItem("user");
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [price, setPrice] = useState<string>("");
@@ -32,17 +33,11 @@ const CreateEvent = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  console.log({ setSelected });
-  console.log(
-    "category:",
-    category,
-    title,
-    description,
-    price,
-    place,
-    date,
-    thumbnail
-  );
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, []);
 
   const categoryHandler = async (selectedCategory: CategorySchema) => {
     setSelected(selectedCategory);
@@ -52,8 +47,6 @@ const CreateEvent = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSubmitting(true);
-
-    const user_id = localStorage.getItem("user");
 
     const eventData = new FormData();
 
@@ -76,7 +69,7 @@ const CreateEvent = () => {
       ) {
         console.log("Event has been sent");
 
-        await api.post("/event", eventData, { headers: { user_id } });
+        await api.post("/event", eventData, { headers: { user } });
 
         navigate("/");
 

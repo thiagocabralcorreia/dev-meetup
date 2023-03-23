@@ -20,15 +20,17 @@ const Login: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    console.log(`Email: ${email}, Password: ${password}`);
-
     const response = await api.post("/login", { email, password });
-    const userId = response.data._id || false;
+    const user_id = response.data.user_id || false;
+    const user = response.data.user || false;
+
+    console.log(user_id, user);
 
     try {
-      if (userId) {
+      if (user && user_id) {
+        localStorage.setItem("user", user);
+        localStorage.setItem("user_id", user_id);
         // If everything is ok, login and navigate to the dashboard
-        localStorage.setItem("user", userId);
         navigate("/");
 
         console.log("Success login!");
@@ -43,7 +45,9 @@ const Login: React.FC = () => {
           setIsSubmitting(false);
         }, 2000);
       }
-    } catch (error) {}
+    } catch (error) {
+      setErrorMessage("Error, the server returned an error");
+    }
   };
 
   return (

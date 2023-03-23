@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   async store(req, res) {
@@ -31,7 +32,23 @@ module.exports = {
           firstName: user.firstName,
           lastName: user.lastName,
         };
-        return res.json(userResponse);
+
+        // return res.json(userResponse);
+
+        return jwt.sign(
+          // Payload of the token contains a `user` object, which is taken from `userResponse`
+          { user: userResponse },
+          // The secret key used to sign the token
+          "secret",
+          // A callback function with an `err` and a `token` parameter
+          (err, token) => {
+            // If there is no error, return an object containing the signed token and the `_id` of the user
+            return res.json({
+              user: token,
+              user_id: userResponse._id,
+            });
+          }
+        );
       } else {
         return res
           .status(200)

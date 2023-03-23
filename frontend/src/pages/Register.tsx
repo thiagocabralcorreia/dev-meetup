@@ -47,12 +47,12 @@ const Register = () => {
           const userId = response.data._id || false;
 
           if (userId) {
-            // If everything is ok, register, login and navigate to the dashboard
+            // If everything is ok, register, login and navigate to login page
             localStorage.setItem("user", userId);
 
             toastSuccess();
             setTimeout(() => {
-              navigate("/");
+              navigate("/login");
               setIsSubmitting(false);
             }, 2000);
           } else {

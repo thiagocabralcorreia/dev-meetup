@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 
 import api from "../services/api";
+import EventCard from "../components/EventCard";
+import Select from "../components/Select";
+import Modal from "../components/Modal";
+
 import { EventSchema } from "../types/events";
 import { CategorySchema } from "../types/category";
-import Select from "../components/Select";
 import { eventCategory } from "../utils/eventCategory";
-import EventCard from "../components/EventCard";
 import { formatDate } from "../utils/formatDate";
-import { toast } from "react-toastify";
-import Modal from "../components/Modal";
 
 const categories = [
   { value: "", name: "All categories" },
@@ -22,18 +24,26 @@ const categories = [
 ];
 
 const Dashboard = () => {
-  const user_id = localStorage.getItem("user");
+  const navigate = useNavigate();
+  const user = localStorage.getItem("user");
+  const user_id = localStorage.getItem("user_id");
   const [events, setEvents] = useState<EventSchema[]>([]);
   const [selectedEventId, setSelectedEventId] = useState<string>("");
   const [selected, setSelected] = useState<CategorySchema>(categories[0]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [canDelete, setCanDelete] = useState<boolean>(false);
 
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, []);
+
   const filterHandler = async (query: CategorySchema) => {
     if (query.value === "myevents") {
       setSelected({ value: "myevents", name: "My Events" });
-      const response = await api.get("user/events", { headers: { user_id } });
-      setEvents(response.data);
+      const response = await api.get("user/events", { headers: { user } });
+      setEvents(response.data.events);
     } else {
       setSelected(query);
       getEvents(query.value);
@@ -42,9 +52,9 @@ const Dashboard = () => {
 
   const getEvents = async (filter: string) => {
     const url = filter !== "" ? `/dashboard/${filter}` : "/dashboard";
-    const response = await api.get(url);
+    const response = await api.get(url, { headers: { user: user } });
 
-    setEvents(response.data);
+    setEvents(response.data.events);
   };
 
   const toastSuccess = () =>
@@ -56,18 +66,18 @@ const Dashboard = () => {
   const deleteEventHandler = async (eventId: string) => {
     setCanDelete(true);
     try {
-      await api.delete(`/event/${eventId}`);
+      await api.delete(`/event/${eventId}`, { headers: { user: user } });
       setIsOpen(false);
+      toastSuccess();
 
       setTimeout(() => {
-        toastSuccess();
         setCanDelete(false);
       }, 2000);
     } catch (error) {
       setIsOpen(false);
+      toastError();
 
       setTimeout(() => {
-        toastError();
         setCanDelete(false);
       }, 2000);
     }
