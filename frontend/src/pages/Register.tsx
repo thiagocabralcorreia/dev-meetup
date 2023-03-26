@@ -7,6 +7,8 @@ import { ClipLoader } from "react-spinners";
 import Input from "../components/Input";
 import api from "../services/api";
 
+import "react-toastify/dist/ReactToastify.css";
+
 const Register = () => {
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState<string>("");
@@ -44,11 +46,13 @@ const Register = () => {
             firstName,
             lastName,
           });
-          const userId = response.data._id || false;
+          const user = response.data.user || false;
+          const user_id = response.data.user_id || false;
+          // If everything is ok, register, login and navigate to login page
 
-          if (userId) {
-            // If everything is ok, register, login and navigate to login page
-            localStorage.setItem("user", userId);
+          if (user && user_id) {
+            localStorage.setItem("user", user);
+            localStorage.setItem("user_id", user_id);
 
             toastSuccess();
             setTimeout(() => {

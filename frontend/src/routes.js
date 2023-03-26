@@ -13,7 +13,7 @@ export default function AppRoutes() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/event" element={<CreateEvent />} />
+        <Route path="/create-event" element={<CreateEvent />} />
       </Routes>
     </Router>
   );

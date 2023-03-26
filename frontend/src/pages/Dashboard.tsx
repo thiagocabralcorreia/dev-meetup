@@ -13,6 +13,8 @@ import { CategorySchema } from "../types/category";
 import { eventCategory } from "../utils/eventCategory";
 import { formatDate } from "../utils/formatDate";
 
+import "react-toastify/dist/ReactToastify.css";
+
 const categories = [
   { value: "", name: "All categories" },
   { value: "", name: "All categories" },

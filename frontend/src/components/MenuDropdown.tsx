@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { FiMoreHorizontal } from "react-icons/fi";
+import Tooltip from "./Tooltip";
 
 interface MenuDropdownProps {
   deleteHandler?: () => void;
@@ -11,10 +12,15 @@ const MenuDropdown: React.FC<MenuDropdownProps> = ({ deleteHandler }) => {
     <Menu as="div" className="relative inline-block text-left">
       <div>
         <Menu.Button className="my-auto">
-          <FiMoreHorizontal
-            className="ml-2 -mr-1 h-5 w-5 transition duration-150 ease-out hover:ease-in text-gray-500 hover:text-primary"
-            aria-hidden="true"
-          />
+          <Tooltip
+            text="Edit or delete this event"
+            customStyle="top-5 right-0 w-[165px]"
+          >
+            <FiMoreHorizontal
+              className="ml-2 -mr-1 h-5 w-5 transition duration-150 ease-out hover:ease-in text-gray-500 hover:text-primary"
+              aria-hidden="true"
+            />
+          </Tooltip>
         </Menu.Button>
       </div>
       <Transition
