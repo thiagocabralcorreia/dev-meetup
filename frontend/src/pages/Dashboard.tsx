@@ -1,7 +1,17 @@
-import { useEffect, useState } from "react";
+import {
+  JSXElementConstructor,
+  Key,
+  ReactElement,
+  ReactFragment,
+  ReactPortal,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import * as io from "socket.io-client";
 
 import api from "../services/api";
 import EventCard from "../components/EventCard";
@@ -34,12 +44,7 @@ const Dashboard = () => {
   const [selected, setSelected] = useState<CategorySchema>(categories[0]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [canDelete, setCanDelete] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    }
-  }, []);
+  const [eventsRequest, setEventsRequest] = useState<any>([]);
 
   const filterHandler = async (query: CategorySchema) => {
     if (query.value === "myevents") {
@@ -54,34 +59,56 @@ const Dashboard = () => {
 
   const getEvents = async (filter: string) => {
     const url = filter !== "" ? `/dashboard/${filter}` : "/dashboard";
-    const response = await api.get(url, { headers: { user: user } });
+    const response = await api.get(url, { headers: { user } });
 
     setEvents(response.data.events);
   };
 
-  const toastSuccess = () =>
-    toast.success("The event was deleted successfully!", { autoClose: 2000 });
+  useEffect(() => {
+    getEvents(selected.value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canDelete]);
 
-  const toastError = () =>
-    toast.error("Error when deleting event!", { autoClose: 2000 });
+  const socket = useMemo(
+    () => io.connect("http://localhost:8000/", { query: { user: user_id } }),
+    [user_id]
+  );
+
+  useEffect(() => {
+    socket.on("registration_request", (data) =>
+      setEventsRequest([...eventsRequest, data])
+    );
+  }, [eventsRequest, socket]);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, []);
+
+  const toastSuccess = (message: string) =>
+    toast.success(message, { autoClose: 2000 });
+
+  const toastError = (message: string) =>
+    toast.error(message, { autoClose: 2000 });
 
   const deleteEventHandler = async (eventId: string) => {
     setCanDelete(true);
     try {
-      await api.delete(`/event/${eventId}`, { headers: { user: user } });
+      await api.delete(`/event/${eventId}`, { headers: { user } });
       setIsOpen(false);
-      toastSuccess();
+      toastSuccess("The event was deleted successfully!");
 
       setTimeout(() => {
         setCanDelete(false);
-      }, 2000);
+      }, 4000);
     } catch (error) {
       setIsOpen(false);
-      toastError();
+      toastError("Error when deleting event!");
 
       setTimeout(() => {
         setCanDelete(false);
-      }, 2000);
+      }, 4000);
     }
   };
 
@@ -91,15 +118,25 @@ const Dashboard = () => {
     setSelectedEventId(eventId);
   };
 
-  const newestEvents = events.slice().reverse();
+  const registrationRequestHandler = async (event: EventSchema) => {
+    try {
+      await api.post(`/registration/${event.id}`, {}, { headers: { user } });
 
-  useEffect(() => {
-    getEvents(selected.value);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canDelete]);
+      toastSuccess(
+        `The request for the event ${event.title} was successfully!`
+      );
+    } catch (error) {
+      toastError(
+        `The request for the event ${event.title} wasn't successfully!`
+      );
+    }
+  };
+
+  const newestEvents = events.slice().reverse();
 
   return (
     <div className="header-height min-h-screen pb-5">
+      <ToastContainer />
       <Modal
         isOpen={isOpen}
         closeModal={() => setIsOpen(false)}
@@ -122,6 +159,66 @@ const Dashboard = () => {
         />
       </motion.div>
 
+      <div className="w-auto mt-10 px-10 md:px-16">
+        {eventsRequest.map(
+          (request: {
+            id: Key | null | undefined;
+            user: {
+              email:
+                | string
+                | number
+                | boolean
+                | ReactElement<any, string | JSXElementConstructor<any>>
+                | ReactFragment
+                | ReactPortal
+                | null
+                | undefined;
+            };
+            event: {
+              title:
+                | string
+                | number
+                | boolean
+                | ReactElement<any, string | JSXElementConstructor<any>>
+                | ReactFragment
+                | ReactPortal
+                | null
+                | undefined;
+            };
+          }) => {
+            return (
+              <motion.div
+                initial={{ opacity: 0, x: -180 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="bg-white w-auto m-auto p-6 rounded-lg"
+                key={request.id}
+              >
+                <div className="text-gray-900">
+                  <strong>{request.user.email} </strong> is requesting to
+                  register to your Event <strong>{request.event.title}</strong>
+                </div>
+                <div className="mt-3 flex gap-x-2">
+                  <button
+                    className="py-2 px-4 transition duration-150 ease-out
+                    hover:ease-in rounded-3xl font-bold text-white text-sm btn-cancel"
+                    onClick={() => {}}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="py-2 px-4 transition duration-150 ease-out
+                    hover:ease-in rounded-3xl font-bold text-white text-sm btn-able"
+                    onClick={() => {}}
+                  >
+                    Accept
+                  </button>
+                </div>
+              </motion.div>
+            );
+          }
+        )}
+      </div>
+
       <div
         className="grid grid-cols-1 min-[970px]:grid-cols-2 min-[1400px]:lg:grid-cols-3
       max-sm:m-2 max-sm:mt-12 m-16 gap-x-8"
@@ -140,6 +237,7 @@ const Dashboard = () => {
             price={event.price}
             isEditable={event.user === user_id}
             deleteHandler={() => onModelOpen(event.id)}
+            onClick={() => registrationRequestHandler(event)}
           />
         ))}
       </div>

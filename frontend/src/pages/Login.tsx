@@ -24,8 +24,6 @@ const Login: React.FC = () => {
     const user_id = response.data.user_id || false;
     const user = response.data.user || false;
 
-    console.log(user_id, user);
-
     try {
       if (user && user_id) {
         localStorage.setItem("user", user);

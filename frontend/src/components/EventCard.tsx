@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
-import React, { useState } from "react";
-import { FaDollarSign, FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaDollarSign } from "react-icons/fa";
 import { FiCalendar, FiMapPin } from "react-icons/fi";
 import MenuDropdown from "./MenuDropdown";
 
@@ -16,6 +15,7 @@ interface EventCardProps {
   description: string;
   isEditable: boolean;
   deleteHandler?: () => void;
+  onClick: () => void;
 }
 
 const EventCard: React.FC<EventCardProps> = ({
@@ -30,13 +30,8 @@ const EventCard: React.FC<EventCardProps> = ({
   description,
   isEditable,
   deleteHandler,
+  onClick,
 }) => {
-  const [isFavorite, setIsFavorite] = useState<boolean>(false);
-
-  const handleFavoriteClick = () => {
-    setIsFavorite(!isFavorite);
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, x: -180 }}
@@ -75,28 +70,24 @@ const EventCard: React.FC<EventCardProps> = ({
             {description}
           </div>
 
-          <div className="relative flex pb-3 gap-x-4">
-            <div className="flex items-center gap-x-1 mb-2 text-sm text-gray-500">
-              <FiCalendar />
-              <div>{date}</div>
+          <div className="md:flex justify-between content-center pb-3 gap-x-4">
+            <div className="flex gap-x-4">
+              <div className="flex items-center gap-x-1 mb-2 text-sm text-gray-500">
+                <FiCalendar />
+                <div>{date}</div>
+              </div>
+              <div className="flex items-center mb-2 text-sm">
+                <FaDollarSign className="text-gray-500" />
+                <div className="text-gray-500">{price}</div>
+              </div>
             </div>
-            <div className="flex items-center mb-2 text-sm">
-              <FaDollarSign className="text-gray-500" />
-              <div className="text-gray-500">{price}</div>
-            </div>
-            <div className="absolute top-0 right-0 pb-1 text-lg">
-              {isFavorite ? (
-                <FaHeart
-                  className="cursor-pointer text-primary"
-                  onClick={handleFavoriteClick}
-                />
-              ) : (
-                <FaRegHeart
-                  className="cursor-pointer transition duration-150 ease-out hover:ease-in text-gray-500 hover:text-primary"
-                  onClick={handleFavoriteClick}
-                />
-              )}
-            </div>
+            <button
+              className=" mb-2 py-2 px-4 transition duration-150 ease-out
+              hover:ease-in rounded-3xl font-bold text-white text-xm btn-able"
+              onClick={onClick}
+            >
+              Registration Request
+            </button>
           </div>
         </div>
       </div>
