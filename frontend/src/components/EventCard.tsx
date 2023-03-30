@@ -1,36 +1,30 @@
 import { motion } from "framer-motion";
 import { FaDollarSign } from "react-icons/fa";
 import { FiCalendar, FiMapPin } from "react-icons/fi";
+import { EventSchema } from "../types/event";
+import { formatDate } from "../utils/formatDate";
 import MenuDropdown from "./MenuDropdown";
-
 interface EventCardProps {
-  eventId: string;
-  userId: string;
-  category: string;
-  image: string;
-  title: string;
-  date: string;
-  place: string;
-  price: number;
-  description: string;
-  isEditable: boolean;
+  // eventId: string;
+  // userId: string;
+  // category: string;
+  // image: string;
+  // title: string;
+  // date: string;
+  // place: string;
+  // price: number;
+  // description: string;
+  event: EventSchema;
+  isThisEventCreator: boolean;
   deleteHandler?: () => void;
-  onClick: () => void;
+  requestHandler: () => void;
 }
 
 const EventCard: React.FC<EventCardProps> = ({
-  eventId,
-  userId,
-  category,
-  image,
-  title,
-  date,
-  place,
-  price,
-  description,
-  isEditable,
+  event,
+  isThisEventCreator,
   deleteHandler,
-  onClick,
+  requestHandler,
 }) => {
   return (
     <motion.div
@@ -42,12 +36,12 @@ const EventCard: React.FC<EventCardProps> = ({
       <div className="absolute  mx-auto top-0 left-0 right-0 px-3 max-sm:w-80 w-96 h-48 z-10">
         <div className="relative">
           <img
-            src={image}
-            alt={title}
+            src={event.thumbnail_url}
+            alt={event.title}
             className="w-full h-48 object-cover rounded-lg bg-gray-200"
           />
           <div className="absolute top-2 left-2 p-2 rounded-lg font-bold text-sm text-white bg-pblue">
-            {category}
+            {event.category}
           </div>
         </div>
       </div>
@@ -57,37 +51,39 @@ const EventCard: React.FC<EventCardProps> = ({
           <div className="flex justify-between content-center">
             <div className="flex items-center gap-x-1 mb-2 text-sm text-gray-500">
               <FiMapPin />
-              <div>{place}</div>
+              <div>{event.place}</div>
             </div>
-            {isEditable ? (
+            {isThisEventCreator ? (
               <MenuDropdown deleteHandler={deleteHandler} />
             ) : (
               <></>
             )}
           </div>
-          <div className="font-bold text-xl text-pblue">{title}</div>
+          <div className="font-bold text-xl text-pblue">{event.title}</div>
           <div className="text-md text-gray-600 mb-5 whitespace-pre-line">
-            {description}
+            {event.description}
           </div>
 
           <div className="md:flex justify-between content-center pb-3 gap-x-4">
             <div className="flex gap-x-4">
               <div className="flex items-center gap-x-1 mb-2 text-sm text-gray-500">
                 <FiCalendar />
-                <div>{date}</div>
+                <div>{formatDate(event.date)}</div>
               </div>
               <div className="flex items-center mb-2 text-sm">
                 <FaDollarSign className="text-gray-500" />
-                <div className="text-gray-500">{price}</div>
+                <div className="text-gray-500">{event.price}</div>
               </div>
             </div>
-            <button
-              className=" mb-2 py-2 px-4 transition duration-150 ease-out
+            {!isThisEventCreator && (
+              <button
+                className=" mb-2 py-2 px-4 transition duration-150 ease-out
               hover:ease-in rounded-3xl font-bold text-white text-xm btn-able"
-              onClick={onClick}
-            >
-              Registration Request
-            </button>
+                onClick={requestHandler}
+              >
+                Registration Request
+              </button>
+            )}
           </div>
         </div>
       </div>

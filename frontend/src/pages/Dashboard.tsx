@@ -11,8 +11,6 @@ import Modal from "../components/Modal";
 
 import { EventSchema } from "../types/event";
 import { CategorySchema } from "../types/category";
-import { eventCategory } from "../utils/eventCategory";
-import { formatDate } from "../utils/formatDate";
 
 import "react-toastify/dist/ReactToastify.css";
 import { EventRequestchema } from "../types/eventRequest";
@@ -228,18 +226,10 @@ const Dashboard = () => {
         {newestEvents.map((event) => (
           <EventCard
             key={event.id}
-            eventId={event.id}
-            userId={event.user}
-            category={eventCategory(event.category)}
-            image={event.thumbnail_url}
-            title={event.title}
-            description={event.description}
-            date={formatDate(event.date)}
-            place={event.place}
-            price={event.price}
-            isEditable={event.user === user_id}
+            event={event}
+            isThisEventCreator={event.user === user_id}
             deleteHandler={() => onModelOpen(event.id)}
-            onClick={() => registrationRequestHandler(event)}
+            requestHandler={() => registrationRequestHandler(event)}
           />
         ))}
       </div>
