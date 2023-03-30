@@ -24,17 +24,23 @@ routes.get("/status", (req, res) => {
 routes.post("/login", LoginController.store);
 
 // Registration
-routes.post("/registration/:eventId", RegistrationController.create);
+routes.post(
+  "/registration/:eventId",
+  verifyToken,
+  RegistrationController.createRegistration
+);
 routes.get(
   "/registration/:registration_id",
   RegistrationController.getRegistration
 );
 routes.post(
   "/registration/:registration_id/approvals",
+  verifyToken,
   ApprovalController.approval
 );
 routes.post(
   "/registration/:registration_id/rejections",
+  verifyToken,
   RejectionController.rejection
 );
 
