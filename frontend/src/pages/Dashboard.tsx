@@ -1,13 +1,4 @@
-import {
-  JSXElementConstructor,
-  Key,
-  ReactElement,
-  ReactFragment,
-  ReactPortal,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { toast, ToastContainer } from "react-toastify";
@@ -18,12 +9,13 @@ import EventCard from "../components/EventCard";
 import Select from "../components/Select";
 import Modal from "../components/Modal";
 
-import { EventSchema } from "../types/events";
+import { EventSchema } from "../types/event";
 import { CategorySchema } from "../types/category";
 import { eventCategory } from "../utils/eventCategory";
 import { formatDate } from "../utils/formatDate";
 
 import "react-toastify/dist/ReactToastify.css";
+import { EventRequestchema } from "../types/eventRequest";
 
 const categories = [
   { value: "", name: "All categories" },
@@ -44,7 +36,7 @@ const Dashboard = () => {
   const [selected, setSelected] = useState<CategorySchema>(categories[0]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [canDelete, setCanDelete] = useState<boolean>(false);
-  const [eventsRequest, setEventsRequest] = useState<any>([]);
+  const [eventsRequest, setEventsRequest] = useState<EventRequestchema[]>([]);
 
   const filterHandler = async (query: CategorySchema) => {
     if (query.value === "myevents") {
@@ -84,6 +76,7 @@ const Dashboard = () => {
     if (!user) {
       navigate("/login");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toastSuccess = (message: string) =>
@@ -132,6 +125,41 @@ const Dashboard = () => {
     }
   };
 
+  const acceptEventHandler = async (eventId: string) => {
+    try {
+      await api.post(
+        `/registration/${eventId}/approvals`,
+        {},
+        { headers: { user } }
+      );
+
+      toastSuccess("Event approved successfully!");
+      removeNotificationFromDashboard(eventId);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const rejectEventHandler = async (eventId: string) => {
+    try {
+      await api.post(
+        `/registration/${eventId}/rejections`,
+        {},
+        { headers: { user } }
+      );
+
+      toastSuccess("Event rejected!");
+      removeNotificationFromDashboard(eventId);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const removeNotificationFromDashboard = (eventId: string) => {
+    const newEvents = eventsRequest.filter((event) => event._id !== eventId);
+    setEventsRequest(newEvents);
+  };
+
   const newestEvents = events.slice().reverse();
 
   return (
@@ -160,63 +188,37 @@ const Dashboard = () => {
       </motion.div>
 
       <div className="w-auto mt-10 px-10 md:px-16">
-        {eventsRequest.map(
-          (request: {
-            id: Key | null | undefined;
-            user: {
-              email:
-                | string
-                | number
-                | boolean
-                | ReactElement<any, string | JSXElementConstructor<any>>
-                | ReactFragment
-                | ReactPortal
-                | null
-                | undefined;
-            };
-            event: {
-              title:
-                | string
-                | number
-                | boolean
-                | ReactElement<any, string | JSXElementConstructor<any>>
-                | ReactFragment
-                | ReactPortal
-                | null
-                | undefined;
-            };
-          }) => {
-            return (
-              <motion.div
-                initial={{ opacity: 0, x: -180 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="bg-white w-auto m-auto p-6 rounded-lg"
-                key={request.id}
-              >
-                <div className="text-gray-900">
-                  <strong>{request.user.email} </strong> is requesting to
-                  register to your Event <strong>{request.event.title}</strong>
-                </div>
-                <div className="mt-3 flex gap-x-2">
-                  <button
-                    className="py-2 px-4 transition duration-150 ease-out
+        {eventsRequest.map((request) => {
+          return (
+            <motion.div
+              initial={{ opacity: 0, x: -180 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="bg-white w-auto m-auto p-6 rounded-lg"
+              key={request.id + request._id}
+            >
+              <div className="text-gray-900">
+                <strong>{request.user.email} </strong> is requesting to register
+                to your Event <strong>{request.event.title}</strong>
+              </div>
+              <div className="mt-3 flex gap-x-2">
+                <button
+                  className="py-2 px-4 transition duration-150 ease-out
                     hover:ease-in rounded-3xl font-bold text-white text-sm btn-cancel"
-                    onClick={() => {}}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    className="py-2 px-4 transition duration-150 ease-out
+                  onClick={() => rejectEventHandler(request._id)}
+                >
+                  Reject
+                </button>
+                <button
+                  className="py-2 px-4 transition duration-150 ease-out
                     hover:ease-in rounded-3xl font-bold text-white text-sm btn-able"
-                    onClick={() => {}}
-                  >
-                    Accept
-                  </button>
-                </div>
-              </motion.div>
-            );
-          }
-        )}
+                  onClick={() => acceptEventHandler(request._id)}
+                >
+                  Accept
+                </button>
+              </div>
+            </motion.div>
+          );
+        })}
       </div>
 
       <div
