@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
 import { motion } from "framer-motion";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { FaComments, FaPlusCircle } from "react-icons/fa";
@@ -5,6 +7,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Tooltip from "./Tooltip";
 
 function Header() {
+  const { isLoggedIn, setIsloggedIn } = useContext(UserContext);
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
@@ -13,6 +16,7 @@ function Header() {
   const logoutHandler = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("user_id");
+    setIsloggedIn(false);
     navigate("/login");
   };
 
@@ -31,7 +35,7 @@ function Header() {
           </h1>
         </div>
       </Link>
-      {user && (
+      {isLoggedIn && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

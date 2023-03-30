@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import { motion } from "framer-motion";
 
 import Input from "../components/Input";
@@ -7,9 +8,11 @@ import api from "../services/api";
 import { ClipLoader } from "react-spinners";
 import { FaExclamationCircle } from "react-icons/fa";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { UserContext } from "../context/UserContext";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const { setIsloggedIn } = useContext(UserContext);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -29,6 +32,7 @@ const Login: React.FC = () => {
         localStorage.setItem("user", user);
         localStorage.setItem("user_id", user_id);
         // If everything is ok, login and navigate to the dashboard
+        setIsloggedIn(true);
         navigate("/");
 
         console.log("Success login!");
