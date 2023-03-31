@@ -7,6 +7,8 @@ interface MenuDropdownProps {
   deleteHandler?: () => void;
 }
 
+interface IconProps extends React.SVGProps<SVGSVGElement> {}
+
 const MenuDropdown: React.FC<MenuDropdownProps> = ({ deleteHandler }) => {
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -90,7 +92,7 @@ const MenuDropdown: React.FC<MenuDropdownProps> = ({ deleteHandler }) => {
   );
 };
 
-function EditInactiveIcon(props: any) {
+function EditInactiveIcon(props: IconProps) {
   return (
     <svg
       {...props}
@@ -108,7 +110,7 @@ function EditInactiveIcon(props: any) {
   );
 }
 
-function EditActiveIcon(props: any) {
+function EditActiveIcon(props: IconProps) {
   return (
     <svg
       {...props}
@@ -126,7 +128,7 @@ function EditActiveIcon(props: any) {
   );
 }
 
-function DeleteInactiveIcon(props: any) {
+function DeleteInactiveIcon(props: IconProps) {
   return (
     <svg
       {...props}
@@ -149,7 +151,7 @@ function DeleteInactiveIcon(props: any) {
   );
 }
 
-function DeleteActiveIcon(props: any) {
+function DeleteActiveIcon(props: IconProps) {
   return (
     <svg
       {...props}

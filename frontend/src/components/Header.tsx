@@ -1,10 +1,12 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { motion } from "framer-motion";
 import { RiLogoutCircleRLine } from "react-icons/ri";
-import { FaComments, FaPlusCircle } from "react-icons/fa";
+import { FaComments, FaPlusCircle, FaRegistered } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Tooltip from "./Tooltip";
+import { RegistrationSchema } from "../types/registration";
+import api from "../services/api";
 
 function Header() {
   const { isLoggedIn, setIsloggedIn } = useContext(UserContext);
@@ -12,6 +14,18 @@ function Header() {
   const location = useLocation();
   const currentPath = location.pathname;
   const user = localStorage.getItem("user");
+  const [myEvents, setMyEvents] = useState<RegistrationSchema[]>([]);
+
+  useEffect(() => {
+    getMyEvents();
+  }, []);
+
+  const getMyEvents = async () => {
+    try {
+      const response = await api.get("/registration", { headers: { user } });
+      setMyEvents(response.data);
+    } catch (error) {}
+  };
 
   const logoutHandler = () => {
     localStorage.removeItem("user");
@@ -40,8 +54,20 @@ function Header() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ ease: "easeInOut", duration: 0.6, delay: 0.2 }}
-          className="flex gap-x-4"
+          className="flex justify-between gap-x-4"
         >
+          {myEvents.length !== 0 && currentPath !== "/registrations" && (
+            <Link
+              data-tip="Add Event"
+              to={"/registrations"}
+              className="my-auto cursor-pointer text-white hover:text-primary
+          transition duration-150 ease-out hover:ease-in"
+            >
+              <Tooltip text="Registrations" customStyle="top-10 w-24">
+                <FaRegistered className="text-[20px] md:text-[30px]" />
+              </Tooltip>
+            </Link>
+          )}
           {currentPath !== "/create-event" && (
             <Link
               data-tip="Add Event"
@@ -53,7 +79,7 @@ function Header() {
                 <FaPlusCircle className="text-[20px] md:text-[30px]" />
               </Tooltip>
             </Link>
-          )}{" "}
+          )}
           <div className="my-auto ">
             <Tooltip text="Logout" customStyle="top-10 w-18">
               <RiLogoutCircleRLine

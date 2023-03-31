@@ -15,6 +15,7 @@ module.exports = {
         "light-pink": "#fb6fb0",
         "dark-pink": "#e45397",
         danger: "#F11348",
+        success: "#21ab4d",
       },
       fontFamily: {
         inter: ["Inter", "sans-serif"],

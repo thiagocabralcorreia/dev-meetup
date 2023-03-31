@@ -18,8 +18,6 @@ module.exports = {
           event: eventId,
         });
 
-        console.log({ registration });
-
         // The populate method is a mongoose method that retrieves the associated document(s)
         // from the specified collection(s) and replaces the corresponding ObjectIds
         // in the Registration document with the actual document(s).
@@ -28,6 +26,12 @@ module.exports = {
           { path: "user", select: "-password" }, // avoid password
         ]);
         // .execPopulate();
+        registration.owner = registration.event.user;
+        registration.eventTitle = registration.event.title;
+        registration.eventPrice = registration.event.price;
+        registration.eventDate = registration.event.date;
+        registration.userEmail = registration.user.email;
+        registration.save();
 
         const ownerSocket = req.connectUsers[registration.event.user];
 
@@ -55,5 +59,24 @@ module.exports = {
     } catch (error) {
       return res.status(400).json({ message: "Registration not found" });
     }
+  },
+
+  getMyRegistrations(req, res) {
+    jwt.verify(req.token, "secret", async (err, authData) => {
+      if (err) {
+        res.sendStatus(401);
+      } else {
+        try {
+          const registrationsArr = await Registration.find({
+            owner: authData.user._id,
+          });
+          if (registrationsArr) {
+            return res.json(registrationsArr);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    });
   },
 };
