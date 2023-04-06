@@ -3,11 +3,13 @@ import React, { useEffect, useState } from "react";
 interface FileInputProps {
   onFileSelect: (file: File) => void;
   isSubmitting: boolean;
+  required?: boolean;
 }
 
 const FileInput: React.FC<FileInputProps> = ({
   onFileSelect,
   isSubmitting,
+  required = true,
 }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -47,7 +49,7 @@ const FileInput: React.FC<FileInputProps> = ({
           className="sr-only"
           accept="image/png, image/jpeg"
           onChange={handleFileSelect}
-          required
+          required={required}
         />
       </label>
       <span className="max-md:hidden py-2 text-sm font-medium text-gray-700">

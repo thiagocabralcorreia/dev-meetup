@@ -47,7 +47,7 @@ const EventCard: React.FC<EventCardProps> = ({
               <p>{event.place}</p>
             </div>
             {isThisEventCreator ? (
-              <MenuDropdown deleteHandler={deleteHandler} />
+              <MenuDropdown eventId={event._id} deleteHandler={deleteHandler} />
             ) : (
               <></>
             )}

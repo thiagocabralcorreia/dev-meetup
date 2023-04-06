@@ -66,6 +66,7 @@ routes.post(
   upload.single("thumbnail"),
   EventController.createEvent
 );
+routes.put("/event/:eventId", verifyToken, EventController.editEvent);
 routes.delete("/event/:eventId", verifyToken, EventController.deleteEvent);
 
 // User

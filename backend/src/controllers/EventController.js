@@ -38,7 +38,47 @@ module.exports = {
     });
   },
 
-  async deleteEvent(req, res) {
+  editEvent(req, res) {
+    jwt.verify(req.token, "secret", async (err, authData) => {
+      if (err) {
+        res.statusCode(401);
+      } else {
+        const { eventId } = req.params;
+        const { title, description, price, place, date, category } = req.body;
+        try {
+          const user = await User.findById(authData.user._id);
+
+          if (!user) {
+            return res.status(400).json({ message: "User does not exist!" });
+          }
+          const event = await Event.findById(eventId);
+
+          if (!event) {
+            return res
+              .status(404)
+              .json({ message: "We do not have any event with that ID" });
+          }
+
+          // Update the event with the new values
+          event.title = title || event.title;
+          event.description = description || event.description;
+          event.place = place || event.place;
+          event.date = date || event.date;
+          event.category = category || event.category;
+          event.price = parseFloat(price) || event.price; // Convert to a number
+          event.user = authData.user._id;
+
+          await event.save();
+
+          return res.json(event);
+        } catch (error) {
+          return res.status(400).json({ message: error });
+        }
+      }
+    });
+  },
+
+  deleteEvent(req, res) {
     jwt.verify(req.token, "secret", async (err) => {
       if (err) {
         res.statusCode(401);

@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import { motion } from "framer-motion";
 import { FaExclamationCircle } from "react-icons/fa";
 
 import api from "../services/api";
-import FileInput from "../components/FileInput";
 import Input from "../components/Input";
 import Select from "../components/Select";
 
 import { CategorySchema } from "../types/category";
+import { EventSchema } from "../types/event";
 
 const categories = [
   { value: "", name: "Select a category" },
@@ -19,25 +19,49 @@ const categories = [
   { value: "miscellaneous", name: "Miscellaneous" },
 ];
 
-const CreateEvent = () => {
+const EditEvent = () => {
   const navigate = useNavigate();
+  const { eventId } = useParams();
   const user = localStorage.getItem("user");
+
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [price, setPrice] = useState<string>("");
-  const [thumbnail, setThumbnail] = useState<File | null>(null);
-  const [selected, setSelected] = useState<CategorySchema>(categories[0]);
-  const [category, setCategory] = useState<string>(selected.value);
+  const [category, setCategory] = useState<string>("");
   const [place, setPlace] = useState<string>("");
   const [date, setDate] = useState<string>("");
+  const [event, setEvent] = useState<EventSchema>({} as EventSchema);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [selected, setSelected] = useState<CategorySchema>(categories[0]);
+
+  const getEvent = async () => {
+    const response = await api.get(`/event/${eventId}`, { headers: { user } });
+
+    setEvent(response.data.events);
+  };
 
   useEffect(() => {
+    getEvent();
+
+    console.log({ title });
+
     if (!user) {
       navigate("/login");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    setTitle(event.title);
+    setDescription(event.description);
+    setPrice(event?.price?.toString());
+    setCategory(event.category);
+    setPlace(event.place);
+    setDate(event.date);
+  }, [event]);
+
+  console.log(category);
 
   const categoryHandler = async (selectedCategory: CategorySchema) => {
     setSelected(selectedCategory);
@@ -48,28 +72,26 @@ const CreateEvent = () => {
     event.preventDefault();
     setIsSubmitting(true);
 
-    const eventData = new FormData();
-
-    eventData.append("title", title);
-    eventData.append("description", description);
-    eventData.append("price", price);
-    eventData.append("place", place);
-    eventData.append("date", date);
-    eventData.append("thumbnail", thumbnail!);
-    eventData.append("category", category);
+    const eventData = {
+      title,
+      description,
+      price,
+      place,
+      date,
+      category,
+    };
     try {
       if (
-        title !== "" &&
-        description !== "" &&
-        price !== "" &&
-        place !== "" &&
-        date !== "" &&
-        category !== "" &&
-        thumbnail !== null
+        title !== "" ||
+        description !== "" ||
+        price !== "" ||
+        place !== "" ||
+        date !== "" ||
+        category !== ""
       ) {
-        console.log("Event has been sent");
+        console.log("Event has been edited");
 
-        await api.post("/event", eventData, { headers: { user } });
+        await api.put(`/event/${eventId}`, eventData, { headers: { user } });
 
         navigate("/");
 
@@ -77,7 +99,6 @@ const CreateEvent = () => {
         setTitle("");
         setDescription("");
         setPrice("");
-        setThumbnail(null);
         setCategory("");
         setPlace("");
         setDate("");
@@ -102,44 +123,44 @@ const CreateEvent = () => {
           animate={{ opacity: 1 }}
           transition={{ ease: "easeInOut", duration: 0.6, delay: 0.2 }}
         >
-          <h1 className="form-title mb-10">Create your Event</h1>
+          <h1 className="form-title mb-10">Edit your Event</h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6">
             <Input
               type="text"
-              placeholder="Title"
+              placeholder={title}
               id="title"
               name="title"
               maxLength={32}
               value={title}
+              defaultValue={title}
               handleChange={(e) => setTitle(e.target.value)}
-              required
             />
             <Input
               type="text"
-              placeholder="Description"
+              placeholder={description}
               id="description"
               name="description"
               maxLength={76}
               value={description}
+              defaultValue={description}
               handleChange={(e) => setDescription(e.target.value)}
-              required
             />
             <Input
               type="text"
-              placeholder="Place"
+              placeholder={place}
               id="place"
               name="place"
               value={place}
+              defaultValue={place}
               maxLength={40}
               handleChange={(e) => setPlace(e.target.value)}
-              required
             />
             <Input
               type="date"
               value={date}
+              defaultValue={date}
               maxLength={100}
               handleChange={(e) => setDate(e.target.value)}
-              required
             />
             <Input
               type="number"
@@ -149,7 +170,6 @@ const CreateEvent = () => {
               value={price}
               maxLength={5}
               handleChange={(e) => setPrice(e.target.value)}
-              required
             />
 
             <motion.div
@@ -167,13 +187,6 @@ const CreateEvent = () => {
                 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 text-sm"
               />
             </motion.div>
-          </div>
-
-          <div>
-            <FileInput
-              onFileSelect={(file: File) => setThumbnail(file)}
-              isSubmitting={isSubmitting}
-            />
           </div>
           {errorMessage && (
             <motion.div
@@ -203,7 +216,7 @@ const CreateEvent = () => {
               {isSubmitting ? (
                 <ClipLoader color="#ffffff" size={18} className="m-1" />
               ) : (
-                "Create Event"
+                "Edit Event"
               )}
             </button>
           </div>
@@ -213,4 +226,4 @@ const CreateEvent = () => {
   );
 };
 
-export default CreateEvent;
+export default EditEvent;
