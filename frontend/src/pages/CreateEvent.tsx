@@ -106,7 +106,8 @@ const CreateEvent = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6">
             <Input
               type="text"
-              placeholder="Title"
+              label="Title"
+              placeholder="Enter a title"
               id="title"
               name="title"
               maxLength={32}
@@ -116,7 +117,8 @@ const CreateEvent = () => {
             />
             <Input
               type="text"
-              placeholder="Description"
+              label="Description"
+              placeholder="Enter a short description"
               id="description"
               name="description"
               maxLength={76}
@@ -126,7 +128,8 @@ const CreateEvent = () => {
             />
             <Input
               type="text"
-              placeholder="Place"
+              label="Place"
+              placeholder="Enter the place"
               id="place"
               name="place"
               value={place}
@@ -136,6 +139,7 @@ const CreateEvent = () => {
             />
             <Input
               type="date"
+              label="Date"
               value={date}
               maxLength={100}
               handleChange={(e) => setDate(e.target.value)}
@@ -143,7 +147,8 @@ const CreateEvent = () => {
             />
             <Input
               type="number"
-              placeholder="Price"
+              label="Price"
+              placeholder="Enter the price"
               id="price"
               name="price"
               value={price}

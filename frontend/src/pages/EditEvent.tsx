@@ -127,6 +127,7 @@ const EditEvent = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6">
             <Input
               type="text"
+              label="Title"
               placeholder={title}
               id="title"
               name="title"
@@ -137,6 +138,7 @@ const EditEvent = () => {
             />
             <Input
               type="text"
+              label="Description"
               placeholder={description}
               id="description"
               name="description"
@@ -147,6 +149,7 @@ const EditEvent = () => {
             />
             <Input
               type="text"
+              label="Place"
               placeholder={place}
               id="place"
               name="place"
@@ -157,6 +160,7 @@ const EditEvent = () => {
             />
             <Input
               type="date"
+              label="Date"
               value={date}
               defaultValue={date}
               maxLength={100}
@@ -164,6 +168,7 @@ const EditEvent = () => {
             />
             <Input
               type="number"
+              label="Price"
               placeholder="Price"
               id="price"
               name="price"

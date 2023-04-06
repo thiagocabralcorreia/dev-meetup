@@ -102,7 +102,8 @@ const Register = () => {
           </p>
           <Input
             type="text"
-            placeholder="First name"
+            label="First name"
+            placeholder="Enter your first namee"
             id="firstName"
             name="firstName"
             value={firstName}
@@ -112,7 +113,8 @@ const Register = () => {
           />
           <Input
             type="text"
-            placeholder="Last name"
+            label="Last name"
+            placeholder="Enter your last name"
             id="lastName"
             name="lastName"
             value={lastName}
@@ -122,7 +124,8 @@ const Register = () => {
           />
           <Input
             type="email"
-            placeholder="Email address"
+            label="Email"
+            placeholder="Enter your best email"
             id="email"
             name="email"
             maxLength={50}
@@ -132,7 +135,8 @@ const Register = () => {
           />
           <Input
             type="password"
-            placeholder="Password"
+            label="Password"
+            placeholder="Enter a password"
             id="password"
             name="password"
             maxLength={50}

@@ -69,7 +69,8 @@ const Login: React.FC = () => {
           </p>
           <Input
             type="email"
-            placeholder="Email address"
+            label="Email"
+            placeholder="Enter your email address"
             id="email"
             name="email"
             value={email}
@@ -81,7 +82,8 @@ const Login: React.FC = () => {
           <div className="relative">
             <Input
               type={showPassword ? "text" : "password"}
-              placeholder="Password"
+              label="Password"
+              placeholder="Enter your password"
               id="password"
               name="password"
               maxLength={50}
@@ -95,7 +97,7 @@ const Login: React.FC = () => {
               className="absolute inset-y-0 right-2 flex items-center justify-center
               p-2 z-10 opacity-50 text-lg text-tertiary"
             >
-              {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
+              {!showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
             </button>
           </div>
 
