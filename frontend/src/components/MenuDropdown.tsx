@@ -21,7 +21,7 @@ const MenuDropdown: React.FC<MenuDropdownProps> = ({
         <Menu.Button className="my-auto">
           <Tooltip
             text="Edit or delete this event"
-            customStyle="top-5 right-0 w-[165px]"
+            customStyle="top-7 right-0 w-[165px]"
           >
             <FiMoreHorizontal
               className="ml-2 -mr-1 h-5 w-5 transition duration-150 ease-out hover:ease-in text-gray-500 hover:text-primary"
@@ -40,7 +40,7 @@ const MenuDropdown: React.FC<MenuDropdownProps> = ({
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items
-          className="absolute top-3 right-0 mt-2 w-56 origin-top-right
+          className="absolute top-4 right-0 mt-2 w-56 origin-top-right
         divide-y divide-gray-100 rounded-md bg-white shadow-lg
         ring-1 ring-black ring-opacity-5 focus:outline-none"
         >

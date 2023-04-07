@@ -6,6 +6,7 @@ import CreateEvent from "./pages/CreateEvent";
 import Dashboard from "./pages/Dashboard";
 import MyRegistrations from "./pages/MyRegistrations";
 import EditEvent from "./pages/EditEvent";
+import NotFound from "./pages/NotFound";
 
 export default function AppRoutes() {
   return (
@@ -18,6 +19,7 @@ export default function AppRoutes() {
         <Route path="/create-event" element={<CreateEvent />} />
         <Route path="/edit-event/:eventId" element={<EditEvent />} />
         <Route path="/registrations" element={<MyRegistrations />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
