@@ -56,7 +56,7 @@ function Header() {
           transition={{ ease: "easeInOut", duration: 0.6, delay: 0.2 }}
           className="flex justify-between gap-x-4"
         >
-          {myEvents.length !== 0 && currentPath !== "/registrations" && (
+          {myEvents.length && currentPath !== "/registrations" ? (
             <Link
               data-tip="Add Event"
               to={"/registrations"}
@@ -67,6 +67,8 @@ function Header() {
                 <FaRegistered className="text-[20px] md:text-[30px]" />
               </Tooltip>
             </Link>
+          ) : (
+            <></>
           )}
           {currentPath !== "/create-event" && (
             <Link

@@ -103,7 +103,7 @@ const Register = () => {
           <Input
             type="text"
             label="First name"
-            placeholder="Enter your first namee"
+            placeholder="Enter your first name"
             id="firstName"
             name="firstName"
             value={firstName}
